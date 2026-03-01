@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Islamy',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      debugShowCheckedModeBanner: false,
       home: const FrontScreen(),
     );
   }
@@ -38,7 +39,8 @@ class _FrontScreenState extends State<FrontScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("إسلامي"),
+        centerTitle: true,
+        title: Text("إسلامي", style: TextStyle(fontFamily: "Kitab")),
       ),
       body: Center(
         child: Column(
