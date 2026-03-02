@@ -1,7 +1,10 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:islamy/features/theme/dynamic_color.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  TimeThemeManager.init();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -9,11 +12,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Islamy',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      debugShowCheckedModeBanner: false,
-      home: const FrontScreen(),
+    return ValueListenableBuilder(
+      valueListenable: TimeThemeManager.currentColorNotifier,
+      builder: (context, dynamicColor, child) {
+        final schemes = TimeThemeManager.getSchemes(dynamicColor);
+        final light = schemes[0];
+        final dark = schemes[1];
+        final currentMode = TimeThemeManager.getCurrentThemeMode();
+        return MaterialApp(
+          title: 'Islamy',
+          theme: ThemeData(colorScheme: light, useMaterial3: true),
+          darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
+          themeMode: currentMode,
+          debugShowCheckedModeBanner: false,
+          home: const FrontScreen(),
+        );
+      },
     );
   }
 }
