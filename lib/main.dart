@@ -1,6 +1,5 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:islamy/features/theme/dynamic_color.dart';
+import 'package:aqem/core/theme/dynamic_color.dart';
 
 Future<void> main() async {
   TimeThemeManager.init();
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
         final dark = schemes[1];
         final currentMode = TimeThemeManager.getCurrentThemeMode();
         return MaterialApp(
-          title: 'Islamy',
+          title: 'Aqem',
           theme: ThemeData(colorScheme: light, useMaterial3: true),
           darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
           themeMode: currentMode,

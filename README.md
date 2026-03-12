@@ -1,17 +1,26 @@
-# islamy
+# Aqem
 
-A new Flutter project.
+A Muslim Spritual Companion
 
-## Getting Started
+## Project Structure under `lib/`
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- core/
+  - utils/
+    For all utilities and helper functions
+    - errors/
+      For all custom expected errors
+  - theme/
+    For all styling and theming
+  - widgets/
+    All custom and reusable widgets/components across the whole application
+- features/
+  Have all features/screens of the application
+  `example-feature` acts as structure example
+  - example-feature/
+    - presentation
+      Contains the main feature screen and related widgets
+    - domain/
+      Contains all business logic for UI Presenting
+    - data/
+      Contains all data logic including fetching data
+      and data type converting (ex. json to map) logic preparing for business logic layer
