@@ -33,10 +33,10 @@ class TimeThemeManager {
   static void init() {
     _currentHour = DateTime.now().hour;
 
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(minutes: 1), (timer) {
       _currentHour = DateTime.now().hour;
 
-      DayTimes currentDayTime = DayTimes.midnight;
+      DayTimes currentDayTime = DayTimes.sunrise;
       for (final hour in _times.keys) {
         if (_currentHour >= hour) {
           currentDayTime = _times[hour]!;
@@ -45,13 +45,13 @@ class TimeThemeManager {
         }
       }
       final newColor = _colors[currentDayTime]!;
-      print(
-        "Hour: $_currentHour, mode ${((_currentHour % 24) > 18 || (_currentHour % 24) < 6) ? Brightness.dark : Brightness.light}",
-      );
+      // print(
+      //   "Hour: $_currentHour, mode ${((_currentHour % 24) > 18 || (_currentHour % 24) < 6) ? Brightness.dark : Brightness.light}",
+      // );
 
       if (currentColorNotifier.value != newColor) {
         currentColorNotifier.value = newColor;
-        print("Time changed! Hour: $_currentHour, Period: $currentDayTime");
+        // print("Time changed! Hour: $_currentHour, Period: $currentDayTime");
       }
     });
   }
