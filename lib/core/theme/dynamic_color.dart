@@ -33,7 +33,7 @@ class TimeThemeManager {
   static void init() {
     _currentHour = DateTime.now().hour;
 
-    Timer.periodic(const Duration(minutes: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       _currentHour = DateTime.now().hour;
 
       DayTimes currentDayTime = DayTimes.sunrise;
