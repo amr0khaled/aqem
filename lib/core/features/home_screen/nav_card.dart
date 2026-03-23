@@ -37,7 +37,7 @@ class NavCard extends StatelessWidget{
                     children: [
                       if(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))
                         SpecialIcon(
-                          icon: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
+                          content: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
                           color: iconBackgroundColor,
                         )
                       ,
@@ -45,7 +45,7 @@ class NavCard extends StatelessWidget{
                         trailing:
                         constraints.maxWidth < (MediaQuery.sizeOf(context).width/2)?null:
                         SpecialIcon(
-                          icon: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
+                          content: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
                           color: iconBackgroundColor,
                         ),
                         minVerticalPadding: 16,
