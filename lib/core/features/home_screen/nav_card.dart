@@ -24,19 +24,29 @@ class NavCard extends StatelessWidget{
         },
         hoverDuration: Duration(milliseconds: 90),
         borderRadius: BorderRadius.circular(20),
-        child: Padding(
-                padding: const EdgeInsets.only(left: 20,top: 20,right: 20,bottom:4),
+        child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return Padding(
+                padding: EdgeInsets.only(left: 20,top:(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))? 20:4,right: 20,bottom:4),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.end,
+
                   children: [
-              SpecialIcon(
-                icon: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
-                color: iconBackgroundColor,
-              )
+                    if(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))
+                      SpecialIcon(
+                        icon: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
+                        color: iconBackgroundColor,
+                      )
                     ,
                     ListTile(
+                      trailing:
+                      constraints.maxWidth < (MediaQuery.sizeOf(context).width/2)?null:
+                      SpecialIcon(
+                        icon: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
+                        color: iconBackgroundColor,
+                      ),
                       minVerticalPadding: 16,
                       contentPadding: EdgeInsets.all(0),
                       title: Text(
@@ -61,6 +71,8 @@ class NavCard extends StatelessWidget{
                     )
                   ],
                 ),
+              );
+            }
           ),
       ),
     );
