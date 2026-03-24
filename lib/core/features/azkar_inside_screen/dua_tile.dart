@@ -42,6 +42,11 @@ class _DuaTileState extends State<DuaTile> {
                           _counter++;
                         });
                       },
+                      onLongPress: (){
+                        setState(() {
+                          _counter=0;
+                        });
+                      },
                       style: TextButton.styleFrom(
                           shape: CircleBorder(),
                           padding: .zero,
