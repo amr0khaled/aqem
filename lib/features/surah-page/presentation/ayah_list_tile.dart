@@ -14,13 +14,13 @@ class _AyahListTileState extends State<AyahListTile> {
   Widget build(BuildContext context) {
     bool isDark = Theme.brightnessOf(context) == Brightness.dark;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: isDark ? Colors.grey.shade900 : Colors.white,
         border: Border.all(
-          width: 3,
+          width: 1,
           color: Colors.grey.shade700.withAlpha(0x10),
         ),
       ),
