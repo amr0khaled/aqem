@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class SpecialIcon extends StatelessWidget {
-  const SpecialIcon({super.key,required this.content,this.padding=14,this.borderRadius=24, this.color,this.gradientFlag=true,this.shadowFlag=true,this.scale=1.0});
+  const SpecialIcon({super.key,required this.content,this.padding=14,this.borderRadius=24, this.color,this.gradientFlag=true,this.shadowFlag=true,this.scale=1.0,this.gradient});
   final Widget content;
   final double padding, borderRadius,scale;
   final Color? color;
+  final Gradient? gradient;
   final bool gradientFlag,shadowFlag;
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class SpecialIcon extends StatelessWidget {
         padding: EdgeInsets.all((padding)),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius),
-            gradient: LinearGradient(
+            gradient:gradient?? LinearGradient(
                 colors: [color??Theme.of(context).colorScheme.inversePrimary,
                   Color.from(alpha:1,
                       red: (color?.r ?? Theme.of(context).colorScheme.inversePrimary.r)*(gradientFlag?0.9:1),
