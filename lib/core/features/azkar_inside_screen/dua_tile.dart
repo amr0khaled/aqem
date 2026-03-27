@@ -89,7 +89,7 @@ class _DuaTileState extends State<DuaTile> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 64,left: 12,bottom: 16,top: 8),
+                padding: const EdgeInsets.only(right: 64,left: 12,bottom: 20,top: 8),
                 child: SizedBox(
                   height: _expand?null:25.9,
                   child: Wrap(
