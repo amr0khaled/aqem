@@ -30,6 +30,7 @@ class _DuaTileState extends State<DuaTile> {
         child: Directionality(
           textDirection: .rtl,
           child: Column(
+            mainAxisSize: .min,
             crossAxisAlignment: .start,
             children: [
               ListTile(
@@ -89,47 +90,56 @@ class _DuaTileState extends State<DuaTile> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 64,left: 12,bottom: 20,top: 8),
-                child: SizedBox(
-                  height: _expand?null:25.9,
-                  child: Wrap(
-                    runSpacing: 8,
-                    spacing: 8,
-                    clipBehavior: .antiAlias,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 8),
-                        decoration: BoxDecoration(
-                          color: .fromRGBO(212-10, 175-10, 55-10,1),//todo*******************
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          widget.duaNarrator??'',
-                          style: TextStyle(
-                            fontFamily: 'Kitab',
-                          ),
-                        ),
-                      ),
-                      ...widget.duaNotices!.map(
-                              (notice)=>Container(
-                            padding: const .symmetric(vertical: 2.0,horizontal: 8),
+                padding: const EdgeInsets.only(right: 64,left: 12,top: 8,bottom: 20),
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: _expand?null:25.9,
+                      child: Wrap(
+                        runSpacing: 8,
+                        spacing: 8,
+                        clipBehavior: .antiAlias,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 8),
                             decoration: BoxDecoration(
-                              border: .all(
-                                  color: .fromRGBO(13, 126, 94, 0.12)
-                              ),
-                              borderRadius: .circular(12),
+                              color: .fromRGBO(212-10, 175-10, 55-10,1),//todo*******************
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              notice,
+                              widget.duaNarrator??'',
                               style: TextStyle(
                                 fontFamily: 'Kitab',
                               ),
                             ),
-                          )
-                      ),
+                          ),
+                          ...widget.duaNotices!.map(
+                                  (notice)=>Container(
+                                padding: const .symmetric(vertical: 2.0,horizontal: 8),
+                                decoration: BoxDecoration(
+                                  border: .all(
+                                      color: .fromRGBO(13, 126, 94, 0.12)
+                                  ),
+                                  borderRadius: .circular(12),
+                                ),
+                                child: Text(
+                                  notice,
+                                  style: TextStyle(
+                                    fontFamily: 'Kitab',
+                                  ),
+                                ),
+                              )
+                          ),
 
-                    ],
-                  ),
+                        ],
+                      ),
+                    ),
+                    if(!_expand)
+                    Container(
+                        alignment: .bottomLeft,
+                        child: Icon(Icons.keyboard_arrow_down,size: 22,color: Color(0xFF6B6B6B),))
+
+                  ],
                 ),
               ),
             ],
