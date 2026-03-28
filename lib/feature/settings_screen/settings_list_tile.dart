@@ -63,7 +63,7 @@ class SettingsListTile extends StatelessWidget {
               ],
             ),
           ),
-          contentPadding: .symmetric(vertical: 0,horizontal: 16),
+          contentPadding: .only(top: 0,bottom: 0,left: 16,right: 16+15),
         ),
       ),
     );
