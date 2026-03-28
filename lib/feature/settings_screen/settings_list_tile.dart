@@ -32,7 +32,7 @@ class SettingsListTile extends StatelessWidget {
               begin: .topCenter,
               end: .bottomCenter,
             ),
-            shadowFlag: true,
+            shadowFlag: false,
 
           ),
           title: Text(title,
