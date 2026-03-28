@@ -16,6 +16,7 @@ class NavCard extends StatelessWidget{
     return Directionality(
       textDirection: TextDirection.rtl,//todo*****make this dynamic with the app language
       child: Card(
+        margin: .zero,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)
         ),
