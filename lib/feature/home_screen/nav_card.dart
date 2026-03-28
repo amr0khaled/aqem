@@ -13,69 +13,66 @@ class NavCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,//todo*****make this dynamic with the app language
-      child: Card(
-        margin: .zero,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)
-        ),
+    return Card(
+      margin: .zero,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20)
+      ),
 
-        child: InkWell(
-          onTap: (){
-            onCardTap();
-          },
-          hoverDuration: Duration(milliseconds: 90),
-          borderRadius: BorderRadius.circular(20),
-          child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 20,top:(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))? 20:4,right: 20,bottom:4),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: (){
+          onCardTap();
+        },
+        hoverDuration: Duration(milliseconds: 90),
+        borderRadius: BorderRadius.circular(20),
+        child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return Padding(
+                padding: EdgeInsets.only(left: 20,top:(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))? 20:4,right: 20,bottom:4),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-                    children: [
-                      if(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))
-                        SpecialIcon(
-                          content: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
-                          color: iconBackgroundColor,
-                        )
-                      ,
-                      ListTile(
-                        leading:
-                        constraints.maxWidth < (MediaQuery.sizeOf(context).width/2)?null:
-                        SpecialIcon(
-                          content: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
-                          color: iconBackgroundColor,
-                        ),
-                        minVerticalPadding: 16,
-                        contentPadding: EdgeInsets.all(0),
-                        title: Text(
-                          title,
-                          style: TextStyle(
-                            fontFamily: 'Kitab',//todo*************
-                            fontSize: 18.0,
-                            fontWeight: FontWeight(500),
-                          ),
-                        ),
-                        subtitle: Text(
-                            subtitle,
-                            style: TextStyle(
-                                fontFamily: 'Kitab',//todo**************
-                                fontSize: 12.0,
-                                fontWeight: FontWeight(400),
-                                color: Color.fromRGBO(107, 107, 107, 1)
-                            )
-                        ),
+                  children: [
+                    if(constraints.maxWidth < (MediaQuery.sizeOf(context).width/2))
+                      SpecialIcon(
+                        content: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
+                        color: iconBackgroundColor,
                       )
-                    ],
-                  ),
-                );
-              }
-            ),
-        ),
+                    ,
+                    ListTile(
+                      leading:
+                      constraints.maxWidth < (MediaQuery.sizeOf(context).width/2)?null:
+                      SpecialIcon(
+                        content: Icon(iconData,size: 28,color: iconDataColor??Colors.white,),
+                        color: iconBackgroundColor,
+                      ),
+                      minVerticalPadding: 16,
+                      contentPadding: EdgeInsets.all(0),
+                      title: Text(
+                        title,
+                        style: TextStyle(
+                          fontFamily: 'Kitab',//todo*************
+                          fontSize: 18.0,
+                          fontWeight: FontWeight(500),
+                        ),
+                      ),
+                      subtitle: Text(
+                          subtitle,
+                          style: TextStyle(
+                              fontFamily: 'Kitab',//todo**************
+                              fontSize: 12.0,
+                              fontWeight: FontWeight(400),
+                              color: Color.fromRGBO(107, 107, 107, 1)
+                          )
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          ),
       ),
     );
   }
