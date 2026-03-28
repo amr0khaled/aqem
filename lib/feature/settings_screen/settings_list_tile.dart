@@ -41,7 +41,7 @@ class SettingsListTile extends StatelessWidget {
           subtitle: Text(subTitle,
               style: TextStyle(fontFamily: 'kitab',fontSize: 12,color: Color(0xFF6B6B6B))),
           trailing: trailing??SizedBox(
-            width: 68.67,
+            width: 80,
             child: Row(
               mainAxisAlignment: .end,
               spacing: 12,
