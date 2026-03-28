@@ -1,8 +1,8 @@
 import 'package:aqem/feature/settings_screen/settings_list_tile.dart';
 import 'package:flutter/material.dart';
 
-class ReadFontSizeTile extends StatelessWidget {
-  const ReadFontSizeTile({super.key});
+class FontSizeTile extends StatelessWidget {
+  const FontSizeTile({super.key});
   void _onReadFontTap(){
     //todo
   }
