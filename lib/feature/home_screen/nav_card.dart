@@ -62,8 +62,8 @@ class NavCard extends StatelessWidget{
                           subtitle,
                           style: TextStyle(
                               fontFamily: 'Kitab',//todo**************
-                              fontSize: 12.0,
-                              fontWeight: FontWeight(400),
+                              fontSize: 14.0,
+                              fontWeight: FontWeight(600),
                               color: Color.fromRGBO(107, 107, 107, 1)
                           )
                       ),
