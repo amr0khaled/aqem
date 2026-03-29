@@ -7,7 +7,7 @@ class SettingsListTile extends StatelessWidget {
   final String? trailingTitle;
   final IconData iconData;
   final Widget? trailing;
-  final Color _secondaryTextColor = const Color(0x8F6B6B6B);
+  final Color _secondaryTextColor = const Color(0x9F6B6B6B);
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class SettingsListTile extends StatelessWidget {
           style: TextStyle(fontFamily: 'kitab'),
         ),
         subtitle: Text(subTitle,
-            style: TextStyle(fontFamily: 'kitab',fontSize: 12,color: _secondaryTextColor)),
+            style: TextStyle(fontFamily: 'kitab',fontSize: 13,color: _secondaryTextColor)),
         trailing: trailing??SizedBox(
           width: 80,
           child: Row(
