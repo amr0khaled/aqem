@@ -20,7 +20,7 @@ class VersionTile extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontFamily: 'kitab',
-              color: Color(0xFF6B6B6B),
+              color: const Color(0x8F6B6B6B),
 
             ),
           ),
