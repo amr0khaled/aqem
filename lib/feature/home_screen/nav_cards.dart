@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 
 class NavCards extends StatelessWidget {
   const NavCards({super.key});
+
+  Color _secondaryIconColor(BuildContext context){
+    return Theme.of(context).colorScheme.onTertiaryFixedVariant;
+}
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -24,6 +28,7 @@ class NavCards extends StatelessWidget {
                     iconData: Icons.access_time_outlined,
                     title: 'الآذان',
                     subtitle: 'مواقيت الصلاة',
+                    iconBackgroundColor: _secondaryIconColor(context), //onInverseSurface
                     onCardTap: (){}),
               ),
             ],
@@ -44,6 +49,7 @@ class NavCards extends StatelessWidget {
                     iconData: Icons.notifications_none_outlined,
                     title: 'تذكيرات',
                     subtitle: 'تنبيهات يومية',
+                    iconBackgroundColor: _secondaryIconColor(context), //onInverseSurface
                     onCardTap: (){}),
               ),
             ],
@@ -64,6 +70,7 @@ class NavCards extends StatelessWidget {
                     iconData: Icons.location_on_outlined,
                     title: 'المساجد',
                     subtitle: 'أقرب المساجد',
+                    iconBackgroundColor: _secondaryIconColor(context), //onInverseSurface
                     onCardTap: (){}),
               ),
             ],
@@ -77,8 +84,9 @@ class NavCards extends StatelessWidget {
           SizedBox(height: 12,),
           NavCard(
               iconData: Icons.assistant_navigation,
-              title: 'القبلة',
+              title: 'اتجاه القبلة',
               subtitle: 'تحديد اتجاه القبلة',
+              iconBackgroundColor: _secondaryIconColor(context), //onInverseSurface
               onCardTap: (){}),
         ],
       ),
