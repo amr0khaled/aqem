@@ -1,11 +1,11 @@
-import 'package:aqem/feature/settings_screen/about_app_tile.dart';
-import 'package:aqem/feature/settings_screen/dark_mode_tile.dart';
-import 'package:aqem/feature/settings_screen/drawing_type_tile.dart';
-import 'package:aqem/feature/settings_screen/font_size_tile.dart';
-import 'package:aqem/feature/settings_screen/language_tile.dart';
-import 'package:aqem/feature/settings_screen/notification_tile.dart';
-import 'package:aqem/feature/settings_screen/settings_card.dart';
-import 'package:aqem/feature/settings_screen/version_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/about_app_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/dark_mode_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/drawing_type_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/font_size_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/language_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/notification_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/settings_card.dart';
+import 'package:aqem/features/settings_screen/presentation/version_tile.dart';
 import 'package:flutter/material.dart';
 
 class SettingsCards extends StatelessWidget {

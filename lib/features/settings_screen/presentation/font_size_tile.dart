@@ -1,4 +1,4 @@
-import 'package:aqem/feature/settings_screen/settings_list_tile.dart';
+import 'package:aqem/features/settings_screen/presentation/settings_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class FontSizeTile extends StatelessWidget {
