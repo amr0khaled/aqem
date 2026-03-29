@@ -23,9 +23,17 @@ class _DarkModeTileState extends State<DarkModeTile> {
       subTitle: 'تبديل بين الوضع الفاتح والداكن',
       iconData: Icons.dark_mode_outlined,
       trailing: Transform.scale(
-          scale:44/59,
+          scale:43/59,
           child: Switch( //todo***********************************
             value: _darkMode,
+            inactiveThumbColor: Colors.white.withValues(alpha: 0.8),
+            activeTrackColor: Theme.of(context).colorScheme.inversePrimary,
+            trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+              if (!_darkMode) {
+                return Colors.transparent;
+              }
+              return null; // Use the default color.
+            }),
             onChanged: (_){_changeThemeMode();},
             // inactiveTrackColor: Colors.transparent,
           ))
