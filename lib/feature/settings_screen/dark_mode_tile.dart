@@ -24,7 +24,8 @@ class _DarkModeTileState extends State<DarkModeTile> {
       iconData: Icons.dark_mode_outlined,
       trailing: Transform.scale(
           scale:43/59,
-          child: Switch( //todo***********************************
+          child: Switch(
+            padding: .zero,//todo***********************************
             value: _darkMode,
             inactiveThumbColor: Colors.white.withValues(alpha: 0.8),
             activeTrackColor: Theme.of(context).colorScheme.inversePrimary,
