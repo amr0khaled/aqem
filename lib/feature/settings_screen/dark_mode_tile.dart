@@ -29,14 +29,8 @@ class _DarkModeTileState extends State<DarkModeTile> {
             value: _darkMode,
             inactiveThumbColor: Colors.white.withValues(alpha: 0.8),
             activeTrackColor: Theme.of(context).colorScheme.inversePrimary,
-            trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-              if (!_darkMode) {
-                return Colors.transparent;
-              }
-              return null; // Use the default color.
-            }),
+            trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
             onChanged: (_){_changeThemeMode();},
-            // inactiveTrackColor: Colors.transparent,
           ))
       , onTap: _changeThemeMode,
     );
