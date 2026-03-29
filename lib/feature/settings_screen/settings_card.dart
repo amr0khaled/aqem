@@ -1,4 +1,3 @@
-import 'package:aqem/feature/settings_screen/settings_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class SettingsCard extends StatelessWidget {
@@ -7,53 +6,50 @@ class SettingsCard extends StatelessWidget {
   final List<Widget> settingsCardList;
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: .rtl,
-      child: Column(
-        spacing: 13,
-        crossAxisAlignment: .start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 18),
-            child: Text(title,
-            style: TextStyle(
-              fontFamily: 'kitab',
-              fontSize: 12,
-              color: .new(0xFF6B6B6B),
-              fontWeight: .new(500)
-            ),),
+    return Column(
+      spacing: 13,
+      crossAxisAlignment: .start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 18),
+          child: Text(title,
+          style: TextStyle(
+            fontFamily: 'kitab',
+            fontSize: 12,
+            color: .new(0xFF6B6B6B),
+            fontWeight: .new(500)
+          ),),
+        ),
+        Card(
+          margin: .zero,
+          clipBehavior: .antiAlias,
+          shape: RoundedRectangleBorder(
+              borderRadius: .circular(20)
           ),
-          Card(
-            margin: .zero,
-            clipBehavior: .antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: .circular(20)
-            ),
-            child: Column(
-              mainAxisSize: .min,
-              children: [
-                ...settingsCardList.map((tile){
-                return   Column(
-                  children: [
-                    tile,
-                    if(settingsCardList.last!=tile)
-                    Divider(
-                      color: Color.from(
-                          red:Theme.of(context).colorScheme.inversePrimary.r  ,
-                          green:Theme.of(context).colorScheme.inversePrimary.g ,
-                          blue: Theme.of(context).colorScheme.inversePrimary.b ,
-                          alpha: 0.1),
-                      height: 0,
-                      indent: 15,
-                    )
-                  ],
-                );
-                }),
-              ],
-            ),
+          child: Column(
+            mainAxisSize: .min,
+            children: [
+              ...settingsCardList.map((tile){
+              return   Column(
+                children: [
+                  tile,
+                  if(settingsCardList.last!=tile)
+                  Divider(
+                    color: Color.from(
+                        red:Theme.of(context).colorScheme.inversePrimary.r  ,
+                        green:Theme.of(context).colorScheme.inversePrimary.g ,
+                        blue: Theme.of(context).colorScheme.inversePrimary.b ,
+                        alpha: 0.1),
+                    height: 0,
+                    indent: 15,
+                  )
+                ],
+              );
+              }),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
