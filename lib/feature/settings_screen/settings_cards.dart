@@ -13,28 +13,32 @@ class SettingsCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: ListView(
-        children: [
-          SettingsCard(
-              title: 'الإعدادات العامة',
-              settingsCardList: [DarkModeTile(),LanguageTile(),NotificationTile()]
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          SettingsCard(
-              title: 'إعدادات القراءة',
-              settingsCardList: [DrawingTypeTile(),FontSizeTile()]),
-          SizedBox(
-            height: 20,
-          ),
-          SettingsCard(
-              title: 'حول التطبيق',
-              settingsCardList: [AboutAppTile(),VersionTile()]),
-        ],
+    return Directionality(
+      textDirection: .rtl
+      ,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: ListView(
+          children: [
+            SettingsCard(
+                title: 'الإعدادات العامة',
+                settingsCardList: [DarkModeTile(),LanguageTile(),NotificationTile()]
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            SettingsCard(
+                title: 'إعدادات القراءة',
+                settingsCardList: [DrawingTypeTile(),FontSizeTile()]),
+            SizedBox(
+              height: 20,
+            ),
+            SettingsCard(
+                title: 'حول التطبيق',
+                settingsCardList: [AboutAppTile(),VersionTile()]),
+          ],
 
+        ),
       ),
     );
   }
