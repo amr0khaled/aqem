@@ -15,8 +15,8 @@ class SettingsCard extends StatelessWidget {
           child: Text(title,
           style: TextStyle(
             fontFamily: 'kitab',
-            fontSize: 12,
-            color: .new(0xFF6B6B6B),
+            fontSize: 13,
+            color: const .new(0xFF6B6B6B),
             fontWeight: .new(500)
           ),),
         ),
@@ -35,11 +35,7 @@ class SettingsCard extends StatelessWidget {
                   tile,
                   if(settingsCardList.last!=tile)
                   Divider(
-                    color: Color.from(
-                        red:Theme.of(context).colorScheme.inversePrimary.r  ,
-                        green:Theme.of(context).colorScheme.inversePrimary.g ,
-                        blue: Theme.of(context).colorScheme.inversePrimary.b ,
-                        alpha: 0.1),
+                    color: Theme.of(context).colorScheme.inversePrimary.withValues(alpha: 0.1),
                     height: 0,
                     indent: 15,
                   )
