@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
           themeMode: currentMode,
           debugShowCheckedModeBanner: false,
-          home: SurahSelection(),
+          home: LanguageSelection(),
           locale:Locale('ar','EG'),
           supportedLocales: [
             Locale('ar','EG'),

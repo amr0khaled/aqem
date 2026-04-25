@@ -20,6 +20,22 @@ class _LanguageSelectionScreen extends State<LanguageSelection>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 60),
+              Center( child:
+              Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(23),
+                  color:Color.fromARGB(255, 13, 126, 94) ,
+                  shape: BoxShape.rectangle,
+                  boxShadow:[BoxShadow(color:Colors.black12,
+                    blurRadius: 2,
+                    offset: const Offset(1,1),)],
+                ),
+                padding: EdgeInsets.all(10),
+                child: Icon(Icons.language, size: 48, color: Colors.white),
+              ),),
+              SizedBox( height: 10,),
               Center(
                 child: const Text(
                   'اختر اللغة',
@@ -39,14 +55,14 @@ class _LanguageSelectionScreen extends State<LanguageSelection>{
                 ),),
               const SizedBox(height: 40),
               _buildLanguageOption(
-                icon: Icon(Icons.language) ,
+                icon: Icon(Icons.language,) ,
                 language: 'العربية',
                 subLanguage: 'Arabic',
                 isSelected: selectedLanguage=='Arabic',
               ),
               const SizedBox(height: 16),
               _buildLanguageOption(
-                icon: Icon(Icons.location_city),
+                icon: Icon(Icons.south_america,),
                 language: 'English',
                 subLanguage: 'English',
                 isSelected: selectedLanguage=='English',
@@ -88,21 +104,36 @@ class _LanguageSelectionScreen extends State<LanguageSelection>{
     required String subLanguage,
     required bool isSelected,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isSelected ? const Color.fromARGB(255, 13, 126, 94) : const Color(0xFFFFFFFF),
-          width: 1.5,
+    return GestureDetector(onTap: (){
+      setState(() {
+        selectedLanguage = subLanguage;
+      });
+    },
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            gradient: isSelected ?
+            const LinearGradient(colors:
+            [Color.fromARGB(255, 227, 255, 246),
+            Color(0xFFFFFFFF),
+            ],): null,
+            color: const Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(20),
+           border: Border.all(
+          color: isSelected ? Color.fromARGB(255, 13, 126, 94): const Color(0xFFFFFFFF),
+          width: 2,
         ),
-        borderRadius: BorderRadius.circular(20),
-        color: isSelected ?  Color.fromARGB(255, 243, 247, 246): const Color(0xFFFFFFFF),
+              boxShadow: isSelected ? [BoxShadow(color:Colors.black12,
+              blurRadius: 2,
+              offset: const Offset(2,2),)]:[],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading:icon,
+        leading: Icon(icon.icon,
+        ),
         title: Text(
           language,
-          style: const TextStyle(
+          style:TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Color(0xFF1A1A1A),
@@ -110,31 +141,33 @@ class _LanguageSelectionScreen extends State<LanguageSelection>{
         ),
         subtitle: Text(
           subLanguage,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             color: Color(0xFF666666),
           ),
         ),
-        trailing:
-        Radio<String>(
-          value: subLanguage,
-          groupValue: selectedLanguage,
-          onChanged: (value) {
-            setState((){
-              selectedLanguage=subLanguage;
+        trailing: isSelected
+            ? Container(
+          decoration: BoxDecoration(
+            color:Color.fromARGB(255, 13, 126, 94) ,
+            shape: BoxShape.circle,
+            boxShadow: isSelected ? [BoxShadow(color:Colors.black12,
+              blurRadius: 2,
+              offset: const Offset(1,1),)]:[],
 
-            });
-          },
-          activeColor: const Color.fromARGB(255, 13, 126, 94),
-        ),
+          ),
+
+          padding: EdgeInsets.all(4),
+          child: Icon(Icons.check, size: 16, color: Colors.white),
+        )
+            : SizedBox(),
         onTap: () {
           setState(() {
             selectedLanguage= subLanguage;
-
           });
-
         },
       ),
+        ),
     );
   }
 }
