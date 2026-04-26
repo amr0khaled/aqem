@@ -81,7 +81,7 @@ class _LanguageSelectionScreen extends State<LanguageSelection>{
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    elevation: 0,
+                    elevation: 2,
                   ),
                   child: const Text(
                     'متابعة',
