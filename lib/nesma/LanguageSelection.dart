@@ -72,7 +72,7 @@ class _LanguageSelectionScreen extends State<LanguageSelection>{
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle continue action
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 13, 126, 94),
