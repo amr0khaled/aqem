@@ -54,6 +54,7 @@ class AyahCard extends StatelessWidget {
       width: 350,
       height: 290,
       child: Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: cardBg,
           borderRadius: BorderRadius.circular(20),
@@ -76,6 +77,7 @@ class AyahCard extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
                         width: 50,

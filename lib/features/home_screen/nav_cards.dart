@@ -1,4 +1,5 @@
 import 'package:aqem/features/home_screen/nav_card.dart';
+import 'package:aqem/nesma/SurahSelection.dart';
 import 'package:flutter/material.dart';
 
 class NavCards extends StatelessWidget {
@@ -12,7 +13,7 @@ class NavCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: .rtl,
-      child: ListView(
+      child: Column(
         children: [
           Row(
             spacing: 12,
@@ -22,7 +23,11 @@ class NavCards extends StatelessWidget {
                   iconData: Icons.book,
                   title: 'المصحف',
                   subtitle: 'قراءة القرآن الكريم',
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SurahSelection()),
+                    );
+                  },
                 ),
               ),
               Expanded(
