@@ -1,4 +1,5 @@
 import 'package:aqem/features/home_screen/app_bar.dart';
+import 'package:aqem/features/home_screen/presentation/next_pray.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -28,6 +29,12 @@ class HomeView extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+            ).add(EdgeInsets.only(top: 32)),
+            child: ListView(children: [NextPray()]),
           ),
         ],
       ),
