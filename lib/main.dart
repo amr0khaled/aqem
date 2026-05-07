@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   TimeThemeManager.init();
@@ -25,6 +26,16 @@ class MyApp extends StatelessWidget {
           themeMode: currentMode,
           debugShowCheckedModeBanner: false,
           home: const FrontScreen(),
+          locale:Locale('ar','EG'),
+          supportedLocales: [
+            Locale('ar','EG'),
+            Locale('en','US'),
+          ],
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
         );
       },
     );
