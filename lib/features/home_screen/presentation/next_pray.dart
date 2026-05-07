@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:aqem/core/widgets/special_icon.dart';
 import 'package:aqem/features/home_screen/domain/prayer_time.dart';
 import 'package:aqem/features/home_screen/presentation/next_pray_small_card.dart';
-import 'package:aqem/features/home_screen/presentation/prayer_type.dart';
+import 'package:aqem/features/home_screen/domain/prayer_type.dart';
 import 'package:flutter/material.dart';
 
 class NextPray extends StatefulWidget {

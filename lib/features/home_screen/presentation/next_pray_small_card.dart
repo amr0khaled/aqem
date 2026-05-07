@@ -1,5 +1,5 @@
 import 'package:aqem/features/home_screen/domain/prayer_time.dart';
-import 'package:aqem/features/home_screen/presentation/prayer_type.dart';
+import 'package:aqem/features/home_screen/domain/prayer_type.dart';
 import 'package:flutter/material.dart';
 
 class NextPrayerTimeCard extends StatelessWidget {

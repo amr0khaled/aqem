@@ -1,3 +1,4 @@
+import 'package:aqem/features/azkar_inside_screen/dua_tile.dart';
 import 'package:aqem/features/home_screen/app_bar.dart';
 import 'package:aqem/features/home_screen/presentation/next_pray.dart';
 import 'package:flutter/material.dart';
