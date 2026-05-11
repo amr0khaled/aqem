@@ -65,7 +65,6 @@ class AyahCard extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(top: 0, right: 0, child: _hollowCircle(100)),
-
               Positioned(bottom: 0, left: 0, child: _hollowCircle(80)),
 
               Directionality(
@@ -114,7 +113,7 @@ class AyahCard extends StatelessWidget {
                           fontSize: 20,
                           height: 1.9,
                           color: verseColor,
-                          fontFamily: 'Cairo',
+                fontFamily: "Kitab",
                         ),
                       ),
                       const SizedBox(height: 10),

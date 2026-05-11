@@ -1,17 +1,19 @@
+import 'package:aqem/features/quran_screen/data/provider.dart';
+import 'package:aqem/features/quran_screen/presentation/ayahs_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SurahSelection extends StatefulWidget {
+class SurahSelection extends ConsumerStatefulWidget {
   int selectedButton = 1;
   @override
   _SurahSelectionScreen createState() => _SurahSelectionScreen();
 }
 
-class _SurahSelectionScreen extends State<SurahSelection> {
+class _SurahSelectionScreen extends ConsumerState<SurahSelection> {
   int selectedButton = 1;
 
   final TextEditingController _searchController = TextEditingController();
 
-  static const Color kGreen = Color(0xFF2D7A5F);
   static const double kExpandedHeight = 180.0;
   static const double kCollapsedHeight = 100.0;
 
@@ -23,6 +25,7 @@ class _SurahSelectionScreen extends State<SurahSelection> {
 
   @override
   Widget build(BuildContext context) {
+    final surahsResponse = ref.watch(surahsProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Color.fromARGB(255, 248, 247, 244),
@@ -196,31 +199,29 @@ class _SurahSelectionScreen extends State<SurahSelection> {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // _buildSurahOption(
-                //   arabName: 'الفاتحة',
-                //   engName: 'Al-Fatihah · 7 آية',
-                //   num: 1,
-                //   makkiyah: true,
-                // ),
-                // const SizedBox(height: 16),
-                // _buildSurahOption(
-                //   arabName: 'البقرة',
-                //   engName: 'Al-Baqarah · 286 آية',
-                //   num: 2,
-                //   makkiyah: false,
-                // ),
-                // const SizedBox(height: 30),
               ],
             ),
           ),
-
-          // SliverList(
-          //   delegate: SliverChildBuilderDelegate(
-          //     (context, index) => _SurahTile(index: index + 1),
-          //     childCount: 114,
-          //   ),
-          // ),
+          surahsResponse.when(
+            data: (body) => SliverList(
+              delegate: SliverChildBuilderDelegate((context, i) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: _buildSurahOption(
+                    arabName: body.surahs[i].name,
+                    engName: body.surahs[i].englishName,
+                    num: body.surahs[i].number,
+                    makkiyah: body.surahs[i].revelationType != "Medinan",
+                  ),
+                );
+              }, childCount: body.count),
+            ),
+            error: (err, stack) =>
+                SliverFillRemaining(child: Center(child: Text('Error: $err'))),
+            loading: () => const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          ),
         ],
       ),
     );
@@ -258,6 +259,12 @@ class _SurahSelectionScreen extends State<SurahSelection> {
             height: 20,
             width: 42,
             alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: makkiyah
+                  ? Color.fromARGB(50, 13, 126, 94)
+                  : Color.fromARGB(50, 212, 175, 55),
+            ),
             child: makkiyah
                 ? Text(
                     "مكية",
@@ -275,12 +282,6 @@ class _SurahSelectionScreen extends State<SurahSelection> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: makkiyah
-                  ? Color.fromARGB(50, 13, 126, 94)
-                  : Color.fromARGB(50, 212, 175, 55),
-            ),
           ),
           title: Text(
             arabName,
@@ -288,6 +289,7 @@ class _SurahSelectionScreen extends State<SurahSelection> {
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: Color(0xFF1A1A1A),
+              fontFamily: "Kitab",
             ),
           ),
           subtitle: Text(
@@ -322,7 +324,11 @@ class _SurahSelectionScreen extends State<SurahSelection> {
             ],
           ),
 
-          onTap: () {},
+          onTap: () {
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (c) => AyahsScreen(surah: num)));
+          },
         ),
       ),
     );

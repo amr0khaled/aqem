@@ -1,11 +1,17 @@
-import 'package:aqem/features/home_screen/view.dart';
+import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   TimeThemeManager.init();
-  runApp(Directionality(textDirection: TextDirection.rtl, child: MyApp()));
+  runApp(
+    ProviderScope(
+      child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +25,8 @@ class MyApp extends StatelessWidget {
         final schemes = TimeThemeManager.getSchemes(dynamicColor);
         final light = schemes[0];
         final dark = schemes[1];
-        final currentMode = TimeThemeManager.getCurrentThemeMode();
+        final currentMode =
+            ThemeMode.light; // TimeThemeManager.getCurrentThemeMode();
         return MaterialApp(
           title: 'Aqem',
           theme: ThemeData(
@@ -32,7 +39,16 @@ class MyApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
+          darkTheme: ThemeData(
+            colorScheme: dark,
+            iconButtonTheme: IconButtonThemeData(
+              style: ButtonStyle(
+                iconSize: WidgetStateProperty.all(20),
+                iconColor: WidgetStateProperty.all(Colors.white),
+              ),
+            ),
+            useMaterial3: true,
+          ),
           themeMode: currentMode,
           debugShowCheckedModeBanner: false,
           home: const FrontScreen(),

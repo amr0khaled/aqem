@@ -1,6 +1,5 @@
-import 'package:aqem/features/azkar_inside_screen/dua_tile.dart';
-import 'package:aqem/features/home_screen/app_bar.dart';
-import 'package:aqem/features/home_screen/nav_cards.dart';
+import 'package:aqem/features/home_screen/presentation/app_bar.dart';
+import 'package:aqem/features/home_screen/presentation/nav_cards.dart';
 import 'package:aqem/features/home_screen/presentation/aya_card.dart';
 import 'package:aqem/features/home_screen/presentation/next_pray.dart';
 import 'package:flutter/material.dart';
