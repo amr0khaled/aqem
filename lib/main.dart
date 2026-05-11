@@ -1,3 +1,4 @@
+import 'package:aqem/nesma/LocationScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData(colorScheme: dark, useMaterial3: true),
           themeMode: currentMode,
           debugShowCheckedModeBanner: false,
-          home: const FrontScreen(),
+          home:  LocationScreen(),
           locale:Locale('ar','EG'),
           supportedLocales: [
             Locale('ar','EG'),
