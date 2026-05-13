@@ -17,28 +17,11 @@ class HomeScreen extends State<Home> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // === Header ===
-              _buildHeader(),
+                 _buildHeader(),
               const SizedBox(height: 20),
-
-              // === Progress Card ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildProgressCard(),
-              ),
-              const SizedBox(height: 28),
-
-              // === Use Lessons Section ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSectionTitle('استخدمي الدروس'),
-              ),
-              const SizedBox(height: 12),
                _buildVideoCardsRow(),
               const SizedBox(height: 28),
 
-              // === My Favorite Courses Section ===
-              const SizedBox(height: 12),
 
             ],
           ),
@@ -70,133 +53,24 @@ class HomeScreen extends State<Home> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+          ElevatedButton.icon(onPressed:  () {
+            Navigator.of(context).pop();
+          },
+              style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            minimumSize: const Size(70, 5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
             ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          ),
+              icon:  Icon(Icons.arrow_forward, color: Color(0xFF00897B),
+                 size: 22), label: Text(""),
           ),
         ],
       ),
     );
   }
 
-  // ===================== PROGRESS CARD =====================
-  Widget _buildProgressCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Left side: Percentage circle
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: CircularProgressIndicator(
-                  value: 0.78,
-                  strokeWidth: 7,
-                  backgroundColor: const Color(0xFFE0E0E0),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF00897B),
-                  ),
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text(
-                    '78%',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF00897B),
-                    ),
-                  ),
-                  Text(
-                    'تقدم',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF9E9E9E),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(width: 20),
-          // Right side: text info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '5 ',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF00897B),
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'دروس',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF00897B),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'أكملت هذا الأسبوع',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF757575),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: LinearProgressIndicator(
-                    value: 0.78,
-                    minHeight: 8,
-                    backgroundColor: const Color(0xFFE0E0E0),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFF00897B),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ===================== SECTION TITLE =====================
   Widget _buildSectionTitle(String title) {
@@ -210,14 +84,14 @@ class HomeScreen extends State<Home> {
     );
   }
   Widget _buildVideoCardsRow() {
-    return Padding(padding:const EdgeInsets.all(30) ,
+    return Padding(padding:const EdgeInsets.all(20) ,
     child: 
-        Wrap( spacing: 30 , runSpacing:20 ,children: [
+        Wrap( spacing: 20 , runSpacing:20 ,children: [
           _buildVideoCard(
           num: 1,
           imageName: 'quran',
           duration: 7,
-          title: 'احكام تجويد صورة الفران',
+          title: 'احكام تجويد صورة القران',
           link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
         ),
         _buildVideoCard(
@@ -288,7 +162,7 @@ class HomeScreen extends State<Home> {
           );
       },
       child: Container(
-      width: 190,
+      width: 150,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
