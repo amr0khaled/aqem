@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-
 class LanguageSelection extends StatefulWidget {
   const LanguageSelection({super.key});
-
   @override
   // ignore: library_private_types_in_public_api
   LanguageSelectionScreen createState() => LanguageSelectionScreen();
 }
-
 class LanguageSelectionScreen extends State<LanguageSelection> {
   String selectedLanguage = 'Arabic';
   @override

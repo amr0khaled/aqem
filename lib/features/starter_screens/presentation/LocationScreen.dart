@@ -1,4 +1,4 @@
-import 'package:aqem/nesma/LanguageSelection.dart';
+import 'package:aqem/features/starter_screens/presentation/LanguageSelection.dart';
 import 'package:flutter/material.dart';
 
 class LocationScreen extends StatelessWidget {

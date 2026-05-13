@@ -1,41 +1,13 @@
+import 'package:aqem/features/QuranLearning/Playlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    ),
-  );
-  runApp(const QuranLearningApp());
-}
-
-class QuranLearningApp extends StatelessWidget {
-  const QuranLearningApp({super.key});
-
+class Home extends StatefulWidget {
+  const Home({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'تعلم القرآن',
-      theme: ThemeData(
-        fontFamily: 'Cairo',
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00897B),
-          primary: const Color(0xFF00897B),
-        ),
-      ),
-      home: const HomeScreen(),
-    );
-  }
+  // ignore: library_private_types_in_public_api
+HomeScreen createState() => HomeScreen();
 }
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
+class HomeScreen extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -62,49 +34,12 @@ class HomeScreen extends StatelessWidget {
                 child: _buildSectionTitle('استخدمي الدروس'),
               ),
               const SizedBox(height: 12),
-              SizedBox(height: 195, child: _buildVideoCardsRow()),
+               _buildVideoCardsRow(),
               const SizedBox(height: 28),
 
               // === My Favorite Courses Section ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSectionTitle('دوراتي المفضلة'),
-              ),
               const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'أهمية القراءة السريعة',
-                subtitle: '45 دقيقة  |  12 درس',
-                progressText: '8 من 12 درس',
-                progressPercent: 0.67,
-                percentText: '67%',
-                isLocked: false,
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'كيف تقرأ',
-                subtitle: '60 دقيقة  |  37 درس',
-                progressText: '15 من 37 درس',
-                progressPercent: 0.41,
-                percentText: '41%',
-                isLocked: false,
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'القراءة السريعة المتقدمة',
-                subtitle: '90 دقيقة  |  30 درس',
-                progressText: '',
-                progressPercent: 0.0,
-                percentText: '',
-                isLocked: true,
-              ),
-              const SizedBox(height: 28),
 
-              // === Promotional Card ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildPromoCard(),
-              ),
-              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -274,35 +209,86 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ===================== VIDEO CARDS ROW =====================
   Widget _buildVideoCardsRow() {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      children: [
-        _buildVideoCard(
-          imageName: 'video1',
-          duration: '15:45',
-          title: 'أهمية القراءة السريعة',
+    return Padding(padding:const EdgeInsets.all(30) ,
+    child: 
+        Wrap( spacing: 30 , runSpacing:20 ,children: [
+          _buildVideoCard(
+          num: 1,
+          imageName: 'quran',
+          duration: 7,
+          title: 'احكام تجويد صورة الفران',
+          link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
         ),
-        const SizedBox(width: 12),
         _buildVideoCard(
+          num: 2,
           imageName: 'video2',
-          duration: '12:30',
-          title: 'التركيز والانتباه',
+          duration:10,
+          title: 'اداب تلاوة القران الكريم',
+          link: ""
         ),
-      ],
-    );
+        _buildVideoCard(
+          num: 3,
+            imageName: 'video1',
+            duration: 5,
+            title: 'قصص الانبياء في القران',
+            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
+        ),
+
+          _buildVideoCard(
+          num: 4,
+            imageName: 'video1',
+            duration: 6,
+            title: 'قصص النساء في القران',
+            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
+        ),
+        _buildVideoCard(
+          num: 5,
+            imageName: 'p1',
+            duration: 444,
+            title: 'قصص العجائب في القران',
+            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
+        ),
+          _buildVideoCard(
+          num: 6,
+            imageName: 'p1',
+            duration: 5,
+            title: 'قصص ايات القران',
+            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
+        ),
+          _buildVideoCard(
+          num: 7,
+            imageName: 'video1',
+            duration: 2,
+            title: ' حفظ جزء عم للاطفال',
+            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
+        ),
+          _buildVideoCard(
+          num: 8,
+            imageName: 'video1',
+            duration: 4,
+            title: ' حفظ جزء عم للبالغين',
+            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
+        ),
+        ],),
+      );
   }
 
   Widget _buildVideoCard({
+    required int num,
     required String imageName,
-    required String duration,
+    required int duration,
     required String title,
+    required String link,
   }) {
-    return Container(
-      width: 175,
+    return GestureDetector(
+      onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => Playlist(num: num)),
+          );
+      },
+      child: Container(
+      width: 190,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -334,7 +320,7 @@ class HomeScreen extends StatelessWidget {
                     colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
                   ),
                   image: DecorationImage(
-                    image: AssetImage('assets/images/$imageName.png'),
+                    image: AssetImage('images/$imageName.jpg'),
                     fit: BoxFit.cover,
                     onError: (_, __) {},
                   ),
@@ -379,7 +365,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    duration,
+                    duration.toString(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -406,199 +392,8 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),);
   }
 
-  // ===================== COURSE CARD =====================
-  Widget _buildCourseCard({
-    required String title,
-    required String subtitle,
-    required String progressText,
-    required double progressPercent,
-    required String percentText,
-    required bool isLocked,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Course info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF333333),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF9E9E9E),
-                    ),
-                  ),
-                  if (!isLocked && progressText.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text(
-                          progressText,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF757575),
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          percentText,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF00897B),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: progressPercent,
-                        minHeight: 6,
-                        backgroundColor: const Color(0xFFE0E0E0),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF00897B),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Action button
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: isLocked
-                    ? const Color(0xFFE0E0E0)
-                    : const Color(0xFFFFC107),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Icon(
-                isLocked ? Icons.lock_outline : Icons.play_arrow,
-                color: isLocked ? const Color(0xFF9E9E9E) : Colors.white,
-                size: 24,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  // ===================== PROMO CARD =====================
-  Widget _buildPromoCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFFFE082), width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Star icon
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFC107).withOpacity(0.25),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.star_rounded,
-              color: Color(0xFFFFA000),
-              size: 28,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Text content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'تسجيل',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF333333),
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  '23 درس جديد في دورة جديدة متاحة الآن',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF757575),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          // Arrow icon
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFC107),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-          ),
-        ],
-      ),
-    );
-  }
 }
