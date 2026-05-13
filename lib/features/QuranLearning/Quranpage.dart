@@ -162,7 +162,7 @@ class HomeScreen extends State<Home> {
           );
       },
       child: Container(
-      width: 150,
+      width: 160,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
