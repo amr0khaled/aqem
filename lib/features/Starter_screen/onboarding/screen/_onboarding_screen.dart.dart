@@ -1,11 +1,10 @@
+import 'package:aqem/core/theme/App_Color.dart';
+import 'package:aqem/features/starter_screen/onboarding/widget/_onboarding_section.dart.dart';
+import 'package:aqem/features/starter_screen/onboarding/widget/button.dart';
+import 'package:aqem/features/starter_screen/onboarding/widget/circle_widget.dart';
+import 'package:aqem/features/starter_screen/onboarding/widget/indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_revision_1/features/onboarding/widget/_onboarding_section.dart.dart';
-import 'package:flutter_revision_1/features/onboarding/widget/button.dart';
-import 'package:flutter_revision_1/features/onboarding/widget/circle_widget.dart';
-import 'package:flutter_revision_1/features/onboarding/widget/indicator.dart';
-import '../../../core/theme/dynamic_color.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_revision_1/features/qibla/presentation/screens/qibla_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -27,13 +26,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     },
     {
       'title': "مواقيت الصلاة",
-      'desc': "تنبيهات دقيقة لمواقيت الصلاة حسب موقعك مع\nصوت الأذان",
+      'desc':
+          "تنبيهات دقيقة لمواقيت الصلاة حسب موقعك مع\nصوت الأذان",
       'image': "assets/icons/clock.png",
       'color': AppColors.gold,
     },
     {
       'title': "رفيقك الروحاني",
-      'desc': "تذكيرات يومية، أذكار، تسبيح، وكل ما تحتاجه في\nرحلتك الإيمانية",
+      'desc':
+          "تذكيرات يومية، أذكار، تسبيح، وكل ما تحتاجه في\nرحلتك الإيمانية",
       'image': "assets/icons/heart.png",
       'color': AppColors.primary,
     },
@@ -41,18 +42,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void nextSection() {
     if (index < sections.length - 1) {
-      setState(() => index++);
+      setState(() {
+        index++;
+      });
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const QiblaScreen()),
-      );
+      Navigator.pushReplacementNamed(context, '/language');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final h = MediaQuery.of(context).size.height;
     final current = sections[index];
 
     return Scaffold(
@@ -83,40 +82,49 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           Padding(
-  padding: EdgeInsets.all(20.w),
-  child: Column(
-    children: [
-      Expanded(flex: 2, child: SizedBox()),
-      OnboardingSection(
-        title: current['title'] as String,
-        description: current['desc'] as String,
-        image: current['image'] as String,
-        color: current['color'] as Color,
-      ),
-      SizedBox(height: 30.h),
-      Indicator(index: index, activeColor: current['color'] as Color),
-      Expanded(flex: 3, child: SizedBox()),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Button(
-            text: index == sections.length - 1 ? "ابدأ الآن" : "< التالي",
-            color: current['color'] as Color,
-            onTap: nextSection,
-          ),
-          if (index != sections.length - 1)
-            const Text(
-              "تخطي",
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xFF9E9E9E),
-              ),
-            )
-          else
-            const SizedBox(),
-        ],
-      ),
-      SizedBox(height: 20.h),
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              children: [
+                const Expanded(
+                  flex: 2,
+                  child: SizedBox(),
+                ),
+                OnboardingSection(
+                  title: current['title'] as String,
+                  description: current['desc'] as String,
+                  image: current['image'] as String,
+                  color: current['color'] as Color,
+                ),
+                SizedBox(height: 30.h),
+                Indicator(
+                  index: index,
+                  activeColor: current['color'] as Color,
+                ),
+                const Expanded(
+                  flex: 3,
+                  child: SizedBox(),
+                ),
+                Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                  children: [
+                    Button(
+                      text: index == sections.length - 1
+                          ? "ابدأ الآن"
+                          : "< التالي",
+                      color: current['color'] as Color,
+                      onTap: nextSection,
+                    ),
+                    const Text(
+                      "تخطي",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF9E9E9E),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),

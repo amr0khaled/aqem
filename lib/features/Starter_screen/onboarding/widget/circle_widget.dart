@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../../../core/theme/dynamic_color.dart';
+import 'package:aqem/core/theme/App_Color.dart'; 
+import 'package:flutter/material.dart'; 
 
 class CircleWidget extends StatelessWidget {
   final double size;
@@ -20,7 +20,10 @@ class CircleWidget extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: color.withOpacity(opacity), width: 2),
+        border: Border.all(
+          color: color.withValues(alpha: opacity),
+          width: 2,
+        ),
       ),
     );
   }

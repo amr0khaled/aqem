@@ -107,5 +107,9 @@ flutter:
     - family: Amiri
       fonts:
         - asset: fonts/Amiri-Regular.ttf
+
+    - family: Cairo
+      fonts:
+        - asset: fonts/Cairo-Regular.ttf   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
