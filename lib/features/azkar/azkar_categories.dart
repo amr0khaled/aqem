@@ -15,13 +15,13 @@ class AdkarApp extends StatelessWidget {
       title: 'الأدعية والأذكار',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Arial', useMaterial3: true),
-      home: const AdkarScreen(),
+      home: const AzkarCategories(),
     );
   }
 }
 
-class AdkarScreen extends StatelessWidget {
-  const AdkarScreen({super.key});
+class AzkarCategories extends StatelessWidget {
+  const AzkarCategories({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,36 +40,42 @@ class AdkarScreen extends StatelessWidget {
         subtitle: '5 ذكر',
         color: const Color(0xFFFF9800),
         emoji: '🌅',
+        onTap: (){print("Sabah");}
       ),
       _CategoryItem(
         title: 'أذكار المساء',
         subtitle: '3 ذكر',
         color: const Color(0xFF9C27B0),
         emoji: '🌙',
+        onTap: (){print("Masaa");}
       ),
       _CategoryItem(
         title: 'أذكار النوم',
         subtitle: '3 ذكر',
         color: const Color(0xFF009688),
         emoji: '🛏️',
+        onTap: (){print("Nawm");},
       ),
       _CategoryItem(
         title: 'أذكار بعد الصلاة',
         subtitle: '5 ذكر',
         color: const Color(0xFF4CAF50),
         emoji: '🕌',
+          onTap: (){print("Salah");}
       ),
       _CategoryItem(
         title: 'أدعية يومية',
         subtitle: '3 ذكر',
         color: const Color(0xFFE91E63),
         emoji: '🤲',
+        onTap: (){print("daily");}
       ),
       _CategoryItem(
         title: 'آيات للحفظ',
         subtitle: '3 ذكر',
         color: const Color(0xFFFF9800),
         emoji: '📖',
+        onTap: (){print("hefz");}
       ),
     ];
 
@@ -103,10 +109,7 @@ class AdkarScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(_CategoryItem item) {
-    return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
+    return Container(
         decoration: BoxDecoration(
           color: item.color,
           borderRadius: BorderRadius.circular(16),
@@ -118,67 +121,74 @@ class AdkarScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              left: 10,
-              top: 0,
-              bottom: 0,
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white.withOpacity(0.7),
-                size: 16,
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 20,
-                bottom: 20,
-                right: 15,
-                left: 35,
-              ),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        item.emoji,
-                        style: const TextStyle(fontSize: 28),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      item.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      item.subtitle,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.85),
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ],
+        child: Material(
+          color: item.color,
+          borderRadius: .circular(16),
+          child: InkWell(
+            onTap: (){item.onTap();},
+            borderRadius: .circular(16),
+            child:  Stack(
+              children: [
+                Positioned(
+                  left: 10,
+                  top: 0,
+                  bottom: 0,
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white.withOpacity(0.7),
+                    size: 16,
+                  ),
                 ),
-              ),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 16,
+                    bottom: 16,
+                    right: 15,
+                    left: 35,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            item.emoji,
+                            style: const TextStyle(fontSize: 28),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          item.subtitle,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.85),
+                            fontSize: 12,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        )
+      );
   }
 }
 
@@ -187,11 +197,13 @@ class _CategoryItem {
   final String subtitle;
   final Color color;
   final String emoji;
+  final Function onTap;
 
   const _CategoryItem({
     required this.title,
     required this.subtitle,
     required this.color,
     required this.emoji,
+    required this.onTap,
   });
 }
