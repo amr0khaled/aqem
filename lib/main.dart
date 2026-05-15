@@ -1,40 +1,80 @@
+import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_revision_1/features/Starter_screen/onboarding/screen/_onboarding_screen.dart.dart';
-import 'package:flutter_revision_1/features/Starter_screen/splash/presentation/screens/splash_screen.dart';
-import 'package:flutter_revision_1/features/qibla/presentation/screens/qibla_screen.dart';
-import 'package:flutter_revision_1/features/strater_screen/LanguageSelection.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_revision_1/core/theme/dynamic_color.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:aqem/core/theme/dynamic_color.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  TimeThemeManager.init();
   runApp(
-    const ProviderScope(
-      child: AqmApp(),
+    ProviderScope(
+      child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),
     ),
   );
 }
 
-class AqmApp extends StatelessWidget {
-  const AqmApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      builder: (context, child) {
+    return ValueListenableBuilder(
+      valueListenable: TimeThemeManager.currentColorNotifier,
+      builder: (context, dynamicColor, child) {
+        final schemes = TimeThemeManager.getSchemes(dynamicColor);
+        final light = schemes[0];
+        final dark = schemes[1];
+        final currentMode =
+            ThemeMode.light; // TimeThemeManager.getCurrentThemeMode();
         return MaterialApp(
+          title: 'Aqem',
+          theme: ThemeData(
+            colorScheme: light,
+            iconButtonTheme: IconButtonThemeData(
+              style: ButtonStyle(
+                iconSize: WidgetStateProperty.all(20),
+                iconColor: WidgetStateProperty.all(Colors.white),
+              ),
+            ),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: dark,
+            iconButtonTheme: IconButtonThemeData(
+              style: ButtonStyle(
+                iconSize: WidgetStateProperty.all(20),
+                iconColor: WidgetStateProperty.all(Colors.white),
+              ),
+            ),
+            useMaterial3: true,
+          ),
+          themeMode: currentMode,
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.light,
-          home: const SplashScreen(),
-      
-          routes: {
-            '/onboarding': (_) => const OnboardingScreen(),
-              '/language': (_) => const LanguageSelection(),
-          },
+          home: const FrontScreen(),
+          locale: Locale('ar', 'EG'),
+          supportedLocales: [Locale('ar', 'EG'), Locale('en', 'US')],
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
         );
       },
     );
+  }
+}
+
+class FrontScreen extends StatefulWidget {
+  const FrontScreen({super.key});
+
+  @override
+  State<FrontScreen> createState() => _FrontScreenState();
+}
+
+class _FrontScreenState extends State<FrontScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(extendBodyBehindAppBar: true, body: HomeView());
   }
 }
