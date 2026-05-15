@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_revision_1/features/onboarding/screen/_onboarding_screen.dart.dart';
-import 'package:flutter_revision_1/features/splash/presentation/screens/splash_screen.dart';
+import 'package:flutter_revision_1/features/Starter_screen/onboarding/screen/_onboarding_screen.dart.dart';
+import 'package:flutter_revision_1/features/Starter_screen/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter_revision_1/features/qibla/presentation/screens/qibla_screen.dart';
+import 'package:flutter_revision_1/features/strater_screen/LanguageSelection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_revision_1/core/theme/dynamic_color.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +31,7 @@ class AqmApp extends StatelessWidget {
       
           routes: {
             '/onboarding': (_) => const OnboardingScreen(),
-            '/qibla': (_) => const QiblaScreen(),
+              '/language': (_) => const LanguageSelection(),
           },
         );
       },
