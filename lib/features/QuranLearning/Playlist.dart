@@ -19,9 +19,7 @@ class PlaylistScreen extends State<Playlist> {
       extendBodyBehindAppBar: true,
       backgroundColor: Color.fromARGB(255, 248, 247, 244),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,7 +78,6 @@ class PlaylistScreen extends State<Playlist> {
               ],
             ),
           ),
-        ),
       ),
     );
   }
@@ -157,7 +154,7 @@ class PlaylistScreen extends State<Playlist> {
   }
 
   Widget _videos2() {
-    return ListView(
+    return Column(
       children: [
         _buildPlaylistOption(
           name: "الاداب الظاهره للتلاوه",
@@ -205,7 +202,7 @@ class PlaylistScreen extends State<Playlist> {
   }
 
   Widget _videos3() {
-    return ListView(
+    return Column(
       children: [
         _buildPlaylistOption(
           name: "غراب بني ادم",
@@ -253,7 +250,7 @@ class PlaylistScreen extends State<Playlist> {
   }
 
   Widget _videos4() {
-    return ListView(
+    return Column(
       children: [
         _buildPlaylistOption(
           name: "الاداب الظاهره للتلاوه",
@@ -301,7 +298,7 @@ class PlaylistScreen extends State<Playlist> {
   }
 
   Widget _videos5() {
-    return ListView(
+    return Column(
       children: [
         _buildPlaylistOption(
           name: "الاداب الظاهره للتلاوه",
@@ -349,7 +346,7 @@ class PlaylistScreen extends State<Playlist> {
   }
 
   Widget _videos6() {
-    return ListView(
+    return Column(
       children: [
         _buildPlaylistOption(
           name: "الاداب الظاهره للتلاوه",
@@ -397,7 +394,7 @@ class PlaylistScreen extends State<Playlist> {
   }
 
   Widget _videos7() {
-    return ListView(
+    return Column(
       children: [
         _buildPlaylistOption(
           name: "الاداب الظاهره للتلاوه",

@@ -16,7 +16,7 @@ class _YoutubeScreenState extends State<YoutubeScreen> {
   @override
   void initState() {
     super.initState();
-    id== YoutubePlayer.convertUrlToId( widget.url)??'';
+    id= YoutubePlayer.convertUrlToId( widget.url)??'';
     controller = YoutubePlayerController(
       initialVideoId: id, // video id
       flags: const YoutubePlayerFlags(
