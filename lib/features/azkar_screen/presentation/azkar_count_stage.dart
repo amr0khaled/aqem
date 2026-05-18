@@ -1,5 +1,4 @@
-import 'package:aqem/features/azkar/presentation/azkar_count_widget.dart';
-import 'package:aqem/features/azkar/data/dua_data.dart';
+import 'package:aqem/features/azkar_screen/presentation/azkar_count_widget.dart';
 import 'package:flutter/material.dart';
 
 class AzkarCountStage extends StatelessWidget {
