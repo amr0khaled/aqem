@@ -9,6 +9,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class OnboardingModel {
+  final String title;
+  final String desc;
+  final String image;
+  final Color color;
+
+  const OnboardingModel({
+    required this.title,
+    required this.desc,
+    required this.image,
+    required this.color,
+  });
+}
+
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -19,26 +33,26 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int index = 0;
 
-  final sections = [
-    {
-      'title': "القرآن الكريم",
-      'desc':
+  final List<OnboardingModel> sections = const [
+    OnboardingModel(
+      title: "القرآن الكريم",
+      desc:
           "اقرأ القرآن الكريم بخط واضح وتصميم جميل مع\nإمكانية الاستماع للتلاوات",
-      'image': "assets/icons/book.png",
-      'color': AppColors.primary,
-    },
-    {
-      'title': "مواقيت الصلاة",
-      'desc': "تنبيهات دقيقة لمواقيت الصلاة حسب موقعك مع\nصوت الأذان",
-      'image': "assets/icons/clock.png",
-      'color': AppColors.gold,
-    },
-    {
-      'title': "رفيقك الروحاني",
-      'desc': "تذكيرات يومية، أذكار، تسبيح، وكل ما تحتاجه في\nرحلتك الإيمانية",
-      'image': "assets/icons/heart.png",
-      'color': AppColors.primary,
-    },
+      image: "assets/icons/book.png",
+      color: AppColors.primary,
+    ),
+    OnboardingModel(
+      title: "مواقيت الصلاة",
+      desc: "تنبيهات دقيقة لمواقيت الصلاة حسب موقعك مع\nصوت الأذان",
+      image: "assets/icons/clock.png",
+      color: AppColors.gold,
+    ),
+    OnboardingModel(
+      title: "رفيقك الروحاني",
+      desc: "تذكيرات يومية، أذكار، تسبيح، وكل ما تحتاجه في\nرحلتك الإيمانية",
+      image: "assets/icons/heart.png",
+      color: AppColors.primary,
+    ),
   ];
 
   void nextSection() async {
@@ -48,7 +62,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       });
     } else {
       final prefs = await SharedPreferences.getInstance();
-
       await prefs.setBool('isFirstTime', false);
 
       if (!mounted) return;
@@ -71,7 +84,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             alignment: const Alignment(1.9, -1.2),
             child: CircleWidget(
               size: 200.w,
-              color: current['color'] as Color,
+              color: current.color,
               opacity: 0.10,
             ),
           ),
@@ -79,7 +92,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             alignment: const Alignment(0, -0.2),
             child: CircleWidget(
               size: 280.w,
-              color: current['color'] as Color,
+              color: current.color,
               opacity: 0.05,
             ),
           ),
@@ -96,15 +109,23 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             child: Column(
               children: [
                 const Expanded(flex: 2, child: SizedBox()),
+
                 OnboardingSection(
-                  title: current['title'] as String,
-                  description: current['desc'] as String,
-                  image: current['image'] as String,
-                  color: current['color'] as Color,
+                  title: current.title,
+                  description: current.desc,
+                  image: current.image,
+                  color: current.color,
                 ),
+
                 SizedBox(height: 30.h),
-                Indicator(index: index, activeColor: current['color'] as Color),
+
+                Indicator(
+                  index: index,
+                  activeColor: current.color,
+                ),
+
                 const Expanded(flex: 3, child: SizedBox()),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -112,11 +133,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       text: index == sections.length - 1
                           ? "ابدأ الآن"
                           : "< التالي",
-                      color: current['color'] as Color,
+                      color: current.color,
                       onTap: nextSection,
                     ),
                   ],
                 ),
+
                 SizedBox(height: 20.h),
               ],
             ),
