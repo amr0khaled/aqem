@@ -1,19 +1,22 @@
 import 'package:aqem/core/theme/App_Color.dart';
-import 'package:aqem/features/starter_screen/onboarding/widget/_onboarding_section.dart.dart';
-import 'package:aqem/features/starter_screen/onboarding/widget/button.dart';
-import 'package:aqem/features/starter_screen/onboarding/widget/circle_widget.dart';
-import 'package:aqem/features/starter_screen/onboarding/widget/indicator.dart';
+import 'package:aqem/features/QuranLearning/Quranpage.dart';
+import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/_onboarding_section.dart.dart';
+import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/button.dart';
+import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/circle_widget.dart';
+import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int index = 0;
 
   final sections = [
@@ -26,27 +29,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     },
     {
       'title': "مواقيت الصلاة",
-      'desc':
-          "تنبيهات دقيقة لمواقيت الصلاة حسب موقعك مع\nصوت الأذان",
+      'desc': "تنبيهات دقيقة لمواقيت الصلاة حسب موقعك مع\nصوت الأذان",
       'image': "assets/icons/clock.png",
       'color': AppColors.gold,
     },
     {
       'title': "رفيقك الروحاني",
-      'desc':
-          "تذكيرات يومية، أذكار، تسبيح، وكل ما تحتاجه في\nرحلتك الإيمانية",
+      'desc': "تذكيرات يومية، أذكار، تسبيح، وكل ما تحتاجه في\nرحلتك الإيمانية",
       'image': "assets/icons/heart.png",
       'color': AppColors.primary,
     },
   ];
 
-  void nextSection() {
+  void nextSection() async {
     if (index < sections.length - 1) {
       setState(() {
         index++;
       });
     } else {
-      Navigator.pushReplacementNamed(context, '/language');
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setBool('isFirstTime', false);
+
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
     }
   }
 
@@ -85,10 +95,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             padding: EdgeInsets.all(20.w),
             child: Column(
               children: [
-                const Expanded(
-                  flex: 2,
-                  child: SizedBox(),
-                ),
+                const Expanded(flex: 2, child: SizedBox()),
                 OnboardingSection(
                   title: current['title'] as String,
                   description: current['desc'] as String,
@@ -96,17 +103,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   color: current['color'] as Color,
                 ),
                 SizedBox(height: 30.h),
-                Indicator(
-                  index: index,
-                  activeColor: current['color'] as Color,
-                ),
-                const Expanded(
-                  flex: 3,
-                  child: SizedBox(),
-                ),
+                Indicator(index: index, activeColor: current['color'] as Color),
+                const Expanded(flex: 3, child: SizedBox()),
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Button(
                       text: index == sections.length - 1
@@ -114,13 +114,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           : "< التالي",
                       color: current['color'] as Color,
                       onTap: nextSection,
-                    ),
-                    const Text(
-                      "تخطي",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF9E9E9E),
-                      ),
                     ),
                   ],
                 ),

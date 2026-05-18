@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:aqem/core/theme/App_Color.dart';
-import 'package:aqem/features/starter_screen/onboarding/screen/_onboarding_screen.dart.dart';
-import 'package:aqem/features/starter_screen/onboarding/widget/circle_widget.dart'; 
+import 'package:aqem/features/QuranLearning/Quranpage.dart';
+import 'package:aqem/features/starter_screen/onboarding/presentarion/screen/_onboarding_screen.dart.dart';
+import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,21 +26,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
   final _circleOpacities = const [0.15, 0.08, 0.15];
 
-  @override
-  void initState() {
-    super.initState();
+@override
+void initState() {
+  super.initState();
 
-    Timer(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const OnboardingScreen(),
-          ),
-        );
-      }
-    });
+  navigate();
+}
+
+Future<void> navigate() async {
+  await Future.delayed(const Duration(seconds: 3));
+
+  final prefs = await SharedPreferences.getInstance();
+
+  final isFirstTime =
+      prefs.getBool('isFirstTime') ?? true;
+
+  if (!mounted) return;
+
+  if (isFirstTime) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const OnboardingScreen(),
+      ),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const HomeScreen(),
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: List.generate(
                     3,
                     (i) => Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 4.w,
-                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 4.w),
                       width: 6.w,
                       height: 6.w,
                       decoration: BoxDecoration(
@@ -252,28 +270,16 @@ class CornerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             top: top
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
             bottom: bottom
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
             left: left
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
             right: right
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
           ),
         ),

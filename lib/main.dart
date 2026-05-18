@@ -1,80 +1,42 @@
-import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:flutter/material.dart';
-import 'package:aqem/core/theme/dynamic_color.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main() async {
+import 'core/providers/shared_prefs_provider.dart';
+import 'core/theme/App_Color.dart';
+import 'features/starter_screen/splash/presentation/screens/splash_screen.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  TimeThemeManager.init();
+
+  final prefs = await SharedPreferences.getInstance();
+
   runApp(
     ProviderScope(
-      child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),
+      overrides: [
+        sharedPrefsProvider.overrideWithValue(prefs),
+      ],
+      child: const AqmApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AqmApp extends StatelessWidget {
+  const AqmApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: TimeThemeManager.currentColorNotifier,
-      builder: (context, dynamicColor, child) {
-        final schemes = TimeThemeManager.getSchemes(dynamicColor);
-        final light = schemes[0];
-        final dark = schemes[1];
-        final currentMode =
-            ThemeMode.light; // TimeThemeManager.getCurrentThemeMode();
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      builder: (_, _) {
         return MaterialApp(
-          title: 'Aqem',
-          theme: ThemeData(
-            colorScheme: light,
-            iconButtonTheme: IconButtonThemeData(
-              style: ButtonStyle(
-                iconSize: WidgetStateProperty.all(20),
-                iconColor: WidgetStateProperty.all(Colors.white),
-              ),
-            ),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: dark,
-            iconButtonTheme: IconButtonThemeData(
-              style: ButtonStyle(
-                iconSize: WidgetStateProperty.all(20),
-                iconColor: WidgetStateProperty.all(Colors.white),
-              ),
-            ),
-            useMaterial3: true,
-          ),
-          themeMode: currentMode,
           debugShowCheckedModeBanner: false,
-          home: const FrontScreen(),
-          locale: Locale('ar', 'EG'),
-          supportedLocales: [Locale('ar', 'EG'), Locale('en', 'US')],
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+          theme: AppTheme.light,
+          home: const SplashScreen(),
         );
       },
     );
-  }
-}
-
-class FrontScreen extends StatefulWidget {
-  const FrontScreen({super.key});
-
-  @override
-  State<FrontScreen> createState() => _FrontScreenState();
-}
-
-class _FrontScreenState extends State<FrontScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(extendBodyBehindAppBar: true, body: HomeView());
   }
 }
