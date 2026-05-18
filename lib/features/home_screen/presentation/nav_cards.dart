@@ -1,3 +1,4 @@
+import 'package:aqem/features/azkar_screen/presentation/azkar_screen.dart';
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,11 @@ class NavCards extends StatelessWidget {
                   iconData: Icons.front_hand_outlined,
                   title: 'الأدعية والأذكار',
                   subtitle: 'حصن المسلم',
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => AzkarScreen()),
+                    );
+                  },
                 ),
               ),
               Expanded(

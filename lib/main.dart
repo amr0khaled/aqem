@@ -1,3 +1,4 @@
+import 'package:aqem/features/azkar_screen/data/dua_data.dart';
 import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   TimeThemeManager.init();
+  await initDuaData();
   runApp(
     ProviderScope(
       child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),

@@ -3,19 +3,21 @@ import 'package:aqem/features/azkar_screen/data/dua_data.dart';
 import 'package:flutter/material.dart';
 
 class DuaTile extends StatefulWidget {
-  const DuaTile({super.key
-    ,required this.dua
-    ,this.duaNarrator
-    ,this.duaNotices
-    ,required this.onFavouritePress
-    ,required this.category
-    , required this.onComplete
-    ,this.count
-    , required this.isFavourite
-    , required this.onMidnight,
+  const DuaTile({
+    super.key,
+    required this.dua,
+    this.duaNarrator,
+    this.duaNotices,
+    required this.onFavouritePress,
+    required this.category,
+    required this.onComplete,
+    this.count,
+    required this.isFavourite,
+    required this.onMidnight,
     required this.currentCount,
-    required this.onCountUpdate,});
-  final String? dua,duaNarrator;
+    required this.onCountUpdate,
+  });
+  final String? dua, duaNarrator;
   final List<String>? duaNotices;
   final int? count;
   final void Function() onFavouritePress;
@@ -30,17 +32,16 @@ class DuaTile extends StatefulWidget {
 }
 
 class _DuaTileState extends State<DuaTile> {
-  bool  _expand=false;
+  bool _expand = false;
   int _counter = 100;
-  bool _favourite = false,_disabled=false;
+  bool _favourite = false, _disabled = false;
   Timer? _midnightTimer;
-
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      _favourite=widget.isFavourite;
+      _favourite = widget.isFavourite;
       _counter = widget.currentCount;
       if (_counter == 0) _disabled = true;
     });
@@ -60,7 +61,7 @@ class _DuaTileState extends State<DuaTile> {
     _midnightTimer = Timer(timeUntilMidnight, () {
       if (mounted) {
         setState(() {
-          _counter=widget.count??_counter;
+          _counter = widget.count ?? _counter;
           _disabled = false;
         });
       }
@@ -76,22 +77,21 @@ class _DuaTileState extends State<DuaTile> {
     _midnightTimer?.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: Card(
         shadowColor: Colors.transparent,
-        color: _disabled?Theme.of(context).disabledColor:null,
-        shape:RoundedRectangleBorder(
-            borderRadius: .circular(20)
-        ),
+        color: _disabled ? Theme.of(context).disabledColor : null,
+        shape: RoundedRectangleBorder(borderRadius: .circular(20)),
         child: InkWell(
           borderRadius: .circular(20),
           hoverDuration: Duration(milliseconds: 90),
-          onTap: (){
+          onTap: () {
             setState(() {
-              if(!_disabled) _expand=!_expand;
+              if (!_disabled) _expand = !_expand;
             });
           },
           child: Directionality(
@@ -101,127 +101,148 @@ class _DuaTileState extends State<DuaTile> {
               crossAxisAlignment: .start,
               children: [
                 ListTile(
-
-                  contentPadding: ((widget.duaNotices?.length??0)==1&&(widget.duaNotices?[0].length??0)<19)?EdgeInsets.all(12):EdgeInsetsGeometry.directional(top: 12,start: 12,end: 12,bottom: 0),
+                  contentPadding:
+                      ((widget.duaNotices?.length ?? 0) == 1 &&
+                          (widget.duaNotices?[0].length ?? 0) < 19)
+                      ? EdgeInsets.all(12)
+                      : EdgeInsetsGeometry.directional(
+                          top: 12,
+                          start: 12,
+                          end: 12,
+                          bottom: 0,
+                        ),
                   titleAlignment: .top,
                   horizontalTitleGap: 12,
                   leading: SizedBox(
                     height: 40,
                     width: 40,
                     child: TextButton(
-                        onPressed: (){
-                          if(_counter>0){
-                            setState(() {
-                              _counter--;
-                              widget.onCountUpdate(_counter);
-                            if(_counter==0){
-                              _disabled= true;
+                      onPressed: () {
+                        if (_counter > 0) {
+                          setState(() {
+                            _counter--;
+                            widget.onCountUpdate(_counter);
+                            if (_counter == 0) {
+                              _disabled = true;
                               widget.onComplete();
                             }
-                            });
-                          }
-
-                        },
-                        onLongPress: (){
-                          setState(() {
-                            _counter=widget.count??_counter;
-                            _disabled=false;
-                            widget.onCountUpdate(_counter);
                           });
-                        },
-                        style: TextButton.styleFrom(
-                            shape: CircleBorder(),
-                            padding: .zero,
-                            foregroundColor: Colors.white,
-                            backgroundColor: _disabled?Colors.green:Colors.orange,
-                        ),
-                        child: Text(_counter.toString(),
-                          style: TextStyle(
-                            fontWeight: .new(400),
-                            fontSize: 16
-                          ),)
+                        }
+                      },
+                      onLongPress: () {
+                        setState(() {
+                          _counter = widget.count ?? _counter;
+                          _disabled = false;
+                          widget.onCountUpdate(_counter);
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        shape: CircleBorder(),
+                        padding: .zero,
+                        foregroundColor: Colors.white,
+                        backgroundColor: _disabled
+                            ? Colors.green
+                            : Colors.orange,
+                      ),
+                      child: Text(
+                        _counter.toString(),
+                        style: TextStyle(fontWeight: .new(400), fontSize: 16),
+                      ),
                     ),
                   ),
                   title: Text(
-                    maxLines: _expand?null:2,
-                    overflow: _expand?null:.ellipsis,
-                    widget.dua??'',
-                      style: const TextStyle(
-                        fontFamily: 'Kitab',
-                        height: 1.62
-                      )),
+                    maxLines: _expand ? null : 2,
+                    overflow: _expand ? null : .ellipsis,
+                    widget.dua ?? '',
+                    style: const TextStyle(fontFamily: 'Kitab', height: 1.62),
+                  ),
                   trailing: IconButton(
                     highlightColor: Colors.transparent,
-                      onPressed: (){
-                        setState(() {
-                          _favourite=!_favourite;
-                        });
-                        widget.onFavouritePress();
-                      },
-                      icon: Icon(
-                          _favourite?Icons.favorite:Icons.favorite_outline,
-                          color: _favourite?Colors.red:null,
-                      ),
-                          iconSize: 16,
-                          padding: .zero,
+                    onPressed: () {
+                      setState(() {
+                        _favourite = !_favourite;
+                      });
+                      widget.onFavouritePress();
+                    },
+                    icon: Icon(
+                      _favourite ? Icons.favorite : Icons.favorite_outline,
+                      color: _favourite ? Colors.red : Color(0xff0d7e5e),
+                    ),
+                    iconSize: 16,
+                    padding: .zero,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 64,left: 12,top: 8,bottom: 20),
+                  padding: const EdgeInsets.only(
+                    right: 64,
+                    left: 12,
+                    top: 8,
+                    bottom: 20,
+                  ),
                   child: Stack(
                     children: [
                       SizedBox(
-                        height: _expand?null:25.9,
+                        height: _expand ? null : 25.9,
                         child: Wrap(
                           runSpacing: 8,
                           spacing: 8,
                           clipBehavior: .antiAlias,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 2.0,
+                                horizontal: 8,
+                              ),
                               decoration: BoxDecoration(
-                                color: .fromRGBO(212-10, 175-10, 55-10,1),
+                                color: .fromRGBO(
+                                  212 - 10,
+                                  175 - 10,
+                                  55 - 10,
+                                  1,
+                                ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                widget.duaNarrator??'',
-                                style: TextStyle(
-                                  fontFamily: 'Kitab',
-                                ),
+                                widget.duaNarrator ?? '',
+                                style: TextStyle(fontFamily: 'Kitab'),
                               ),
                             ),
                             ...widget.duaNotices!.map(
-                                    (notice)=>Container(
-                                  padding: const .symmetric(vertical: 2.0,horizontal: 8),
-                                  decoration: BoxDecoration(
-                                    border: .all(
-                                        color: .fromRGBO(13, 126, 94, 0.12)
-                                    ),
-                                    borderRadius: .circular(12),
+                              (notice) => Container(
+                                padding: const .symmetric(
+                                  vertical: 2.0,
+                                  horizontal: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: .all(
+                                    color: .fromRGBO(13, 126, 94, 0.12),
                                   ),
-                                  child: Text(
-                                    notice,
-                                    style: TextStyle(
-                                      fontFamily: 'Kitab',
-                                    ),
-                                  ),
-                                )
+                                  borderRadius: .circular(12),
+                                ),
+                                child: Text(
+                                  notice,
+                                  style: TextStyle(fontFamily: 'Kitab'),
+                                ),
+                              ),
                             ),
-
                           ],
                         ),
                       ),
-                      if(!_expand)
-                      Container(
+                      if (!_expand)
+                        Container(
+                          margin: const EdgeInsets.only(top: 32, left: 16),
                           alignment: .bottomLeft,
-                          child: Icon(Icons.keyboard_arrow_down,size: 22,color: Color(0xFF6B6B6B),))
-
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 22,
+                            color: Color(0xFF6B6B6B),
+                          ),
+                        ),
                     ],
                   ),
                 ),
               ],
             ),
-
           ),
         ),
       ),
