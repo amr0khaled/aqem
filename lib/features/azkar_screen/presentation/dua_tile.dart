@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:aqem/features/azkar/data/dua_data.dart';
+import 'package:aqem/features/azkar_screen/data/dua_data.dart';
 import 'package:flutter/material.dart';
 
 class DuaTile extends StatefulWidget {
@@ -181,7 +180,7 @@ class _DuaTileState extends State<DuaTile> {
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 8),
                               decoration: BoxDecoration(
-                                color: .fromRGBO(212-10, 175-10, 55-10,1),//todo*******************
+                                color: .fromRGBO(212-10, 175-10, 55-10,1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
