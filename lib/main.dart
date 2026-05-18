@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:aqem/core/services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   TimeThemeManager.init();
+    await NotificationService.init();
   runApp(
     ProviderScope(
       child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),
