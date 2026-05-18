@@ -1,30 +1,61 @@
-import 'package:aqem/features/QuranLearning/Playlist.dart';
+import 'package:aqem/core/utils/models/response.dart';
+import 'package:googleapis/youtube/v3.dart';
+import 'package:aqem/features/QuranLearning/PlaylistScreen.dart';
+import 'package:aqem/features/QuranLearning/data/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-class Home extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class Home extends ConsumerStatefulWidget {
   const Home({super.key});
   @override
   // ignore: library_private_types_in_public_api
-HomeScreen createState() => HomeScreen();
+  ConsumerState<Home> createState() => HomeScreen();
 }
-class HomeScreen extends State<Home> {
+
+class HomeScreen extends ConsumerState<Home> {
+  AsyncValue<YoutubeResponse<Playlist>>? service;
+  @override
+  void initState() {
+    super.initState();
+    List<String> playlistsIds = [
+      "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
+      "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
+      "PLi9e2_6LJN0IWTf56ySmcBsBuX82_dNaR",
+      "PLwNeHLk_z0aSekqYqJdRtuYS74rcGXoWF",
+      "PL7WAHKhMttd7_57UysVeO5RHiedgY_rBh",
+      "PLwNeHLk_z0aQ7rYXtqXCqlSPE_4qxUkF2",
+      "PLn3YCsyQvOYbJGlimLvlTw0uBEx5qtkVM",
+      "PLsabgwJDKALr2-EPjszQZ3eTQQ1yl81ui",
+      "PLJ0WU3XQoz4_vDPS0Xlaf3E2LgUz7pJsp",
+      "PLJ0WU3XQoz48dYxaKhohHdaN-DDlTAIx3",
+      "PLN4Jcpui4Yq23t4Yo3rKRzRt9MmMHa70I",
+      "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
+      "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
+      "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
+    ];
+    String? token;
+    final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
+    WidgetsBinding.instance.addPostFrameCallback((t) async {
+      final playlists = await ref.read(playlistProvider(args).future);
+      setState(() {
+        service = AsyncValue.data(playlists);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                 _buildHeader(),
-              const SizedBox(height: 20),
-               _buildVideoCardsRow(),
-              const SizedBox(height: 28),
-
-
-            ],
-          ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(90),
+        child: _buildHeader(),
+      ),
+      body: SizedBox(
+        height: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: _buildVideoCardsRow(),
         ),
       ),
     );
@@ -34,7 +65,7 @@ class HomeScreen extends State<Home> {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(top: 48, bottom: 24, left: 16, right: 16),
+      padding: const EdgeInsets.only(top: 48, bottom: 12, left: 16, right: 16),
       decoration: const BoxDecoration(
         color: Color(0xFF00897B),
         borderRadius: BorderRadius.only(
@@ -53,24 +84,19 @@ class HomeScreen extends State<Home> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          ElevatedButton.icon(onPressed:  () {
-            Navigator.of(context).pop();
-          },
-              style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            minimumSize: const Size(70, 5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: IconButton.styleFrom(
+              minimumSize: const Size(8, 8),
             ),
-          ),
-              icon:  Icon(Icons.arrow_forward, color: Color(0xFF00897B),
-                 size: 22), label: Text(""),
+            icon: Icon(Icons.arrow_forward, color: Colors.white, size: 28),
           ),
         ],
       ),
     );
   }
-
 
   // ===================== SECTION TITLE =====================
   Widget _buildSectionTitle(String title) {
@@ -83,191 +109,190 @@ class HomeScreen extends State<Home> {
       ),
     );
   }
-  Widget _buildVideoCardsRow() {
-    return Padding(padding:const EdgeInsets.all(20) ,
-    child: 
-        Wrap( spacing: 20 , runSpacing:20 ,children: [
-          _buildVideoCard(
-          num: 1,
-          imageName: 'quran',
-          duration: 7,
-          title: 'احكام تجويد صورة القران',
-          link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
-        _buildVideoCard(
-          num: 2,
-          imageName: 'video2',
-          duration:10,
-          title: 'اداب تلاوة القران الكريم',
-          link: ""
-        ),
-        _buildVideoCard(
-          num: 3,
-            imageName: 'video1',
-            duration: 5,
-            title: 'قصص الانبياء في القران',
-            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
 
-          _buildVideoCard(
-          num: 4,
-            imageName: 'video1',
-            duration: 6,
-            title: 'قصص النساء في القران',
-            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
-        _buildVideoCard(
-          num: 5,
-            imageName: 'p1',
-            duration: 444,
-            title: 'قصص العجائب في القران',
-            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
-          _buildVideoCard(
-          num: 6,
-            imageName: 'p1',
-            duration: 5,
-            title: 'قصص ايات القران',
-            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
-          _buildVideoCard(
-          num: 7,
-            imageName: 'video1',
-            duration: 2,
-            title: ' حفظ جزء عم للاطفال',
-            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
-          _buildVideoCard(
-          num: 8,
-            imageName: 'video1',
-            duration: 4,
-            title: ' حفظ جزء عم للبالغين',
-            link: "https://www.youtube.com/watch?v=gHCvfC-5FDo&list=PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm"
-        ),
-        ],),
-      );
+  Widget _buildVideoCardsRow() {
+    return Container(
+      child: service?.when(
+        data: (data) {
+          return SingleChildScrollView(
+            child: Center(
+              child: Wrap(
+                spacing: 20,
+                runSpacing: 20,
+                children: List.generate(data.items.length, (i) {
+                  final item = data.items[i];
+                  final snippet = item.snippet;
+                  if (snippet == null) {
+                    return _buildVideoCard(
+                      id: null,
+                      num: i,
+                      imageName: "NULL",
+                      duration: 0,
+                      title: "NONE",
+                    );
+                  }
+                  return _buildVideoCard(
+                    id: item.id!,
+                    num: i,
+                    imageName: snippet.title ?? "NULL",
+                    duration: item.contentDetails?.itemCount ?? 1,
+                    title: snippet.title ?? "",
+                    thumbnail: snippet.thumbnails?.medium?.url,
+                  );
+                }),
+              ),
+            ),
+          );
+        },
+        error: (err, stack) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error: $err"),
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          return Center(
+            child: Text("""Error: $err
+Stack: $stack"""),
+          );
+        },
+        loading: () => _loading()
+            ,
+      ),
+    );
+  }
+  Widget _loading() {
+    return Container(child: const Center(child: CircularProgressIndicator()));
   }
 
   Widget _buildVideoCard({
+    required String? id,
     required int num,
     required String imageName,
     required int duration,
     required String title,
-    required String link,
+    String? thumbnail,
   }) {
     return GestureDetector(
       onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => Playlist(num: num)),
-          );
+        if (id == null) return;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PlaylistScreen(id: id, name: title),
+          ),
+        );
       },
       child: Container(
-      width: 160,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Thumbnail area
-          Stack(
-            children: [
-              Container(
-                height: 110,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(14),
-                    topRight: Radius.circular(14),
-                  ),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
-                  ),
-                  image: DecorationImage(
-                    image: AssetImage('images/$imageName.jpg'),
-                    fit: BoxFit.cover,
-                    onError: (_, __) {},
-                  ),
-                ),
-              ),
-              // Play button overlay
-              Positioned.fill(
-                child: Center(
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFC107),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 26,
-                    ),
-                  ),
-                ),
-              ),
-              // Duration label
-              Positioned(
-                bottom: 6,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    duration.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Title
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF333333),
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+        width: 160,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 8,
+              offset: const Offset(0, 0),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Thumbnail area
+            Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(14),
+                        topRight: Radius.circular(14),
+                      ),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
+                      ),
+                      image: DecorationImage(
+                        image: thumbnail == null
+                            ? AssetImage('images/$imageName.jpg')
+                            : NetworkImage(thumbnail),
+                        fit: BoxFit.cover,
+                        onError: (_, __) {},
+                      ),
+                    ),
+                  ),
+                ),
+                // Play button overlay
+                Positioned.fill(
+                  child: Center(
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFC107),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                ),
+                // Duration label
+                Positioned(
+                  bottom: 6,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      duration.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Title
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF333333),
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),);
+    );
   }
-
-
 }

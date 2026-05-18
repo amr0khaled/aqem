@@ -1,12 +1,16 @@
 import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   TimeThemeManager.init();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     ProviderScope(
       child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),
@@ -46,6 +50,9 @@ class MyApp extends StatelessWidget {
                 iconSize: WidgetStateProperty.all(20),
                 iconColor: WidgetStateProperty.all(Colors.white),
               ),
+            ),
+            progressIndicatorTheme: ProgressIndicatorThemeData(
+              linearTrackColor: Colors.blue,
             ),
             useMaterial3: true,
           ),
