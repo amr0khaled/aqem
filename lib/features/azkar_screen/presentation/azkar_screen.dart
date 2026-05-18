@@ -1,6 +1,6 @@
 import 'package:aqem/core/widgets/special_icon.dart';
-import 'package:aqem/features/azkar/presentation/azkar_count_stage.dart';
-import 'package:aqem/features/azkar/presentation/azkar_screen.dart';
+import 'package:aqem/features/azkar_screen/presentation/azkar_count_stage.dart';
+import 'package:aqem/features/azkar_screen/presentation/azkar_inside_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../data/dua_data.dart';
@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Wait for the JSON to load and populate globalDuaData
-  await initDuaData();
+  await initDuaData(); //todo: add this to main function!!!!!!!!!!!!!!!!!!!!
   runApp(
     const AdkarApp(),
   );
@@ -25,7 +25,7 @@ class AdkarApp extends StatelessWidget {
       title: 'الأدعية والأذكار',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'kitab', useMaterial3: true),
-      home: const AzkarCategories(),
+      home: const AzkarScreen(),
     );
   }
 }
@@ -79,14 +79,14 @@ final categories = [
       category: DuaCategory.hefz
   ),
 ];
-class AzkarCategories extends StatefulWidget {
-  const AzkarCategories({super.key});
+class AzkarScreen extends StatefulWidget {
+  const AzkarScreen({super.key});
 
   @override
-  State<AzkarCategories> createState() => _AzkarCategoriesState();
+  State<AzkarScreen> createState() => _AzkarScreenState();
 }
 
-class _AzkarCategoriesState extends State<AzkarCategories> {
+class _AzkarScreenState extends State<AzkarScreen> {
   int viewIndex = 0;
   DuaCategory category = DuaCategory.sabah;
 
@@ -157,7 +157,7 @@ class _AzkarCategoriesState extends State<AzkarCategories> {
           favouriteNumber: duaData.where((duaRecord)=>duaRecord.isFavourite).length,
           ),
           viewIndex == 0 ? _buildGrid()
-            : AzkarScreen(
+            : AzkarInsideScreen(
                 category: category,
                 onUpdate: () {
                   setState(() {});
