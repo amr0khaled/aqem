@@ -1,3 +1,4 @@
+import 'package:aqem/features/QuranLearning/Quranpage.dart';
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,11 @@ class NavCards extends StatelessWidget {
                   iconData: Icons.headset_outlined,
                   title: 'تعليم القرآن',
                   subtitle: 'دروس وتلاوات',
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
+                  },
                 ),
               ),
               Expanded(
