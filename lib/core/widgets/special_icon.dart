@@ -17,7 +17,7 @@ class SpecialIcon extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
             gradient:gradient?? LinearGradient(
                 colors: [color??Theme.of(context).colorScheme.inversePrimary,
-                  Color.from(alpha:1,
+                  Color.from(alpha:color?.a??1,
                       red: (color?.r ?? Theme.of(context).colorScheme.inversePrimary.r)*(gradientFlag?0.9:1),
                       green:  (color?.g ?? Theme.of(context).colorScheme.inversePrimary.g)*(gradientFlag?0.9:1),
                       blue:  (color?.b ?? Theme.of(context).colorScheme.inversePrimary.b)*(gradientFlag?0.9:1)
