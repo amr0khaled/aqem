@@ -42,8 +42,20 @@ class NotificationService {
     );
     if (when.isBefore(now)) when = when.add(const Duration(days: 1));
 
+    // Prefer exact alarms (fires precisely on time). Fall back to inexact if
+    // the user hasn't granted the Alarms & Reminders permission (Android 12)
+    // so the notification still fires rather than silently disappearing.
+    // canScheduleExactNotifications() returns null on Android < 12, meaning
+    // no special permission is required there — treat null the same as true.
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    final canExact = await android?.canScheduleExactNotifications();
+    final scheduleMode = canExact == false
+        ? AndroidScheduleMode.inexactAllowWhileIdle
+        : AndroidScheduleMode.alarmClock;
+
     await _plugin.zonedSchedule(
-      reminder.id.hashCode,
+      reminder.id.hashCode.abs(),
       'تذكير',
       reminder.title,
       when,
@@ -57,13 +69,13 @@ class NotificationService {
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.alarmClock,
+      androidScheduleMode: scheduleMode,
       matchDateTimeComponents:
           reminder.isDaily ? DateTimeComponents.time : null,
     );
   }
 
   static Future<void> cancel(String reminderId) async {
-    await _plugin.cancel(reminderId.hashCode);
+    await _plugin.cancel(reminderId.hashCode.abs());
   }
 }
