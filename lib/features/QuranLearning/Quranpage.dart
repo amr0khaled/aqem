@@ -28,13 +28,13 @@ class QuranLearningApp extends StatelessWidget {
           primary: const Color(0xFF00897B),
         ),
       ),
-      home: const HomeScreen(),
+      home: const QuranLearningScreen(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class QuranLearningScreen extends StatelessWidget {
+  const QuranLearningScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
