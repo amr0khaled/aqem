@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:aqem/core/theme/App_Color.dart'; // ← adjust path if needed
+import 'package:aqem/core/theme/App_Color.dart';
 import 'package:aqem/features/tazkier_screen/domain/reminder.dart';
 import 'package:aqem/features/tazkier_screen/presentation/add_reminder_dialog.dart';
 import 'package:aqem/features/tazkier_screen/presentation/providers/reminders_provider.dart';
-import 'package:aqem/features/tazkier_screen/presentation/reminder_options.dart';
+import 'package:aqem/features/tazkier_screen/presentation/widgets/reminder_card.dart';
 
 class TazkierScreen extends ConsumerWidget {
   const TazkierScreen({super.key});
@@ -42,7 +42,7 @@ class TazkierScreen extends ConsumerWidget {
                         )
                       else
                         for (final r in reminders)
-                          _ReminderCard(
+                          ReminderCard(
                             reminder: r,
                             onTap: () => _openEditDialog(context, ref, r),
                           ),
@@ -62,37 +62,38 @@ class TazkierScreen extends ConsumerWidget {
   }
 
   Future<void> _openAddDialog(BuildContext context, WidgetRef ref) async {
-    
     final reminder = await showDialog<Reminder>(
       context: context,
       builder: (_) => const AddReminderDialog(),
     );
+    if (!context.mounted) return;
     if (reminder != null) {
       await ref.read(remindersProvider.notifier).add(reminder);
     }
   }
-}
 
-Future<void> _openEditDialog(
-  BuildContext context,
-  WidgetRef ref,
-  Reminder existing,
-) async {
-  final updated = await showDialog<Reminder>(
-    context: context,
-    builder: (_) => AddReminderDialog(
-      initial: existing,
-      onDelete: () {
-        ref.read(remindersProvider.notifier).remove(existing.id);
-      },
-    ),
-  );
-  if (updated != null) {
-    await ref.read(remindersProvider.notifier).edit(updated);
+  Future<void> _openEditDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Reminder existing,
+  ) async {
+    final updated = await showDialog<Reminder>(
+      context: context,
+      builder: (_) => AddReminderDialog(
+        initial: existing,
+        onDelete: () {
+          ref.read(remindersProvider.notifier).remove(existing.id);
+        },
+      ),
+    );
+    if (!context.mounted) return;
+    if (updated != null) {
+      await ref.read(remindersProvider.notifier).edit(updated);
+    }
   }
 }
 
-// ─── Header ────────────────────────────────────────────────────────────
+// ─── Header ────────────────────────────────────────────────────────────────
 class _Header extends StatelessWidget {
   final VoidCallback onAdd;
   const _Header({required this.onAdd});
@@ -140,142 +141,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-// ─── Reminder card ─────────────────────────────────────────────────────
-class _ReminderCard extends ConsumerWidget {
-  final Reminder reminder;
-  final VoidCallback onTap;
-  const _ReminderCard({required this.reminder, required this.onTap});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Dismissible(
-      key: ValueKey(reminder.id),
-      direction: DismissDirection.horizontal,
-      background: _swipeBackground(AlignmentDirectional.centerStart),
-      secondaryBackground: _swipeBackground(AlignmentDirectional.centerEnd),
-      confirmDismiss: (_) => _confirmDelete(context),
-      onDismissed: (_) {
-        ref.read(remindersProvider.notifier).remove(reminder.id);
-      },
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: availableColors[reminder.colorIndex],
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  availableIcons[reminder.iconIndex],
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      reminder.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          _formatTime(reminder),
-                          style: TextStyle(
-                              color: Colors.grey[600], fontSize: 13),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(Icons.access_time,
-                            size: 14, color: Colors.grey[600]),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Switch(
-                value: reminder.isEnabled,
-                onChanged: (_) {
-                  ref
-                      .read(remindersProvider.notifier)
-                      .toggleEnabled(reminder.id);
-                },
-                activeColor: AppColors.primary,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _swipeBackground(AlignmentGeometry alignment) => Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          color: Colors.red.shade400,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        alignment: alignment,
-        child: const Icon(Icons.delete, color: Colors.white),
-      );
-
-  Future<bool> _confirmDelete(BuildContext context) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('حذف التذكير'),
-        content: Text('هل تريد حذف "${reminder.title}"؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('إلغاء'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('حذف', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-    return ok ?? false;
-  }
-
-  String _formatTime(Reminder r) {
-    final h12 = r.hour == 0 ? 12 : (r.hour > 12 ? r.hour - 12 : r.hour);
-    final period = r.hour < 12 ? 'ص' : 'م';
-    final hh = h12.toString().padLeft(2, '0');
-    final mm = r.minute.toString().padLeft(2, '0');
-    return '$hh:$mm $period';
-  }
-}
-
-
-// ─── Add-new placeholder button ────────────────────────────────────────
+// ─── Add-new placeholder button ────────────────────────────────────────────
 class _AddNewButton extends StatelessWidget {
   final VoidCallback onTap;
   const _AddNewButton({required this.onTap});
@@ -311,7 +177,7 @@ class _AddNewButton extends StatelessWidget {
   }
 }
 
-// ─── Tip card ──────────────────────────────────────────────────────────
+// ─── Tip card ──────────────────────────────────────────────────────────────
 class _TipCard extends StatelessWidget {
   const _TipCard();
 

@@ -4,12 +4,12 @@ import 'package:aqem/features/tazkier_screen/domain/reminder.dart';
 import 'package:aqem/features/tazkier_screen/presentation/reminder_options.dart';
 
 class AddReminderDialog extends StatefulWidget {
-  final Reminder? initial; // ← field 1
-  final VoidCallback? onDelete; // ← field 2 (this is the missing line)
+  final Reminder? initial;
+  final VoidCallback? onDelete;
   const AddReminderDialog({
     super.key,
     this.initial,
-    this.onDelete, // ← matching constructor param
+    this.onDelete,
   });
 
   @override
@@ -18,13 +18,21 @@ class AddReminderDialog extends StatefulWidget {
 
 class _AddReminderDialogState extends State<AddReminderDialog> {
   late final TextEditingController _titleController;
-  late final TextEditingController _timeController;
-  late String _period;
+  late final TextEditingController _messageController;
+  late TimeOfDay _selectedTime;
   late int _selectedIcon;
   late int _selectedColor;
   late bool _dailyRepeat;
 
   bool get _isEditing => widget.initial != null;
+
+  // Formats the current TimeOfDay into a locale-independent 12h Arabic string.
+  String get _formattedTime {
+    final h = _selectedTime.hour;
+    final h12 = h == 0 ? 12 : (h > 12 ? h - 12 : h);
+    final period = h < 12 ? 'ص' : 'م';
+    return '${h12.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')} $period';
+  }
 
   @override
   void initState() {
@@ -32,19 +40,15 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     final r = widget.initial;
     if (r != null) {
       _titleController = TextEditingController(text: r.title);
-      final h12 = r.hour == 0 ? 12 : (r.hour > 12 ? r.hour - 12 : r.hour);
-      _timeController = TextEditingController(
-        text:
-            '${h12.toString().padLeft(2, '0')}:${r.minute.toString().padLeft(2, '0')}',
-      );
-      _period = r.hour < 12 ? 'صباحاً' : 'مساءً';
+      _messageController = TextEditingController(text: r.message ?? '');
+      _selectedTime = TimeOfDay(hour: r.hour, minute: r.minute);
       _selectedIcon = r.iconIndex;
       _selectedColor = r.colorIndex;
       _dailyRepeat = r.isDaily;
     } else {
       _titleController = TextEditingController();
-      _timeController = TextEditingController(text: '12:00');
-      _period = 'صباحاً';
+      _messageController = TextEditingController();
+      _selectedTime = const TimeOfDay(hour: 12, minute: 0);
       _selectedIcon = 2;
       _selectedColor = 4;
       _dailyRepeat = true;
@@ -54,7 +58,7 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
   @override
   void dispose() {
     _titleController.dispose();
-    _timeController.dispose();
+    _messageController.dispose();
     super.dispose();
   }
 
@@ -78,8 +82,10 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
                 _header(),
                 const SizedBox(height: 16),
                 _field('عنوان التذكير', _titleInput()),
+                const SizedBox(height: 12),
+                _field('رسالة الإشعار (اختياري)', _messageInput()),
                 const SizedBox(height: 16),
-                _field('وقت التذكير', _timeRow()),
+                _field('وقت التذكير', _timePicker(context)),
                 const SizedBox(height: 16),
                 _field('اختر الأيقونة', _iconGrid()),
                 const SizedBox(height: 16),
@@ -97,6 +103,8 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
       ),
     );
   }
+
+  // ── Widgets ────────────────────────────────────────────────────────────
 
   Widget _header() => Row(
     children: [
@@ -154,37 +162,39 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     onChanged: (_) => setState(() {}),
   );
 
-  Widget _timeRow() => Row(
-    children: [
-      Expanded(
-        child: TextField(
-          controller: _timeController,
-          textAlign: TextAlign.right,
-          decoration: _inputBox(''),
-          onChanged: (_) => setState(() {}),
-        ),
-      ),
-      const SizedBox(width: 8),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: _period,
-            items: const [
-              DropdownMenuItem(value: 'صباحاً', child: Text('صباحاً')),
-              DropdownMenuItem(value: 'مساءً', child: Text('مساءً')),
-            ],
-            onChanged: (v) => setState(() => _period = v ?? 'صباحاً'),
-          ),
-        ),
-      ),
-    ],
+  Widget _messageInput() => TextField(
+    controller: _messageController,
+    textAlign: TextAlign.right,
+    decoration: _inputBox('مثال: حان وقت ذكرك...'),
   );
+
+  Widget _timePicker(BuildContext context) => InkWell(
+    onTap: () => _pickTime(context),
+    borderRadius: BorderRadius.circular(10),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Row(
+        children: [
+          Text(_formattedTime, style: const TextStyle(fontSize: 15)),
+          const Spacer(),
+          Icon(Icons.schedule, color: Colors.grey[500], size: 20),
+        ],
+      ),
+    ),
+  );
+
+  Future<void> _pickTime(BuildContext context) async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+    if (picked != null) setState(() => _selectedTime = picked);
+  }
 
   Widget _iconGrid() => Wrap(
     spacing: 10,
@@ -305,8 +315,7 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${_timeController.text.isEmpty ? "12:00" : _timeController.text} '
-                    '${_period == "صباحاً" ? "ص" : "م"}',
+                    _formattedTime,
                     style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
                 ],
@@ -358,44 +367,29 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     ],
   );
 
+  // ── Actions ───────────────────────────────────────────────────────────
+
   void _onSave() {
     final title = _titleController.text.trim();
     if (title.isEmpty) {
       _snack('الرجاء إدخال عنوان التذكير');
       return;
     }
-
-    final match = RegExp(
-      r'^(\d{1,2}):(\d{2})$',
-    ).firstMatch(_timeController.text.trim());
-    if (match == null) {
-      _snack('الرجاء إدخال وقت صحيح بالشكل HH:MM');
-      return;
-    }
-    int hour = int.parse(match.group(1)!);
-    final minute = int.parse(match.group(2)!);
-    if (hour < 1 || hour > 12 || minute > 59) {
-      _snack('الرجاء إدخال وقت صحيح');
-      return;
-    }
-    if (_period == 'مساءً' && hour < 12) hour += 12;
-    if (_period == 'صباحاً' && hour == 12) hour = 0;
-
-    final reminder = Reminder(
-      // Keep the existing ID when editing — that's how update() finds it.
-      id:
-          widget.initial?.id ??
-          DateTime.now().millisecondsSinceEpoch.toString(),
-      title: title,
-      hour: hour,
-      minute: minute,
-      iconIndex: _selectedIcon,
-      colorIndex: _selectedColor,
-      isDaily: _dailyRepeat,
-      isEnabled: widget.initial?.isEnabled ?? true,
+    final message = _messageController.text.trim();
+    Navigator.of(context).pop(
+      Reminder(
+        id: widget.initial?.id ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
+        title: title,
+        message: message.isEmpty ? null : message,
+        hour: _selectedTime.hour,
+        minute: _selectedTime.minute,
+        iconIndex: _selectedIcon,
+        colorIndex: _selectedColor,
+        isDaily: _dailyRepeat,
+        isEnabled: widget.initial?.isEnabled ?? true,
+      ),
     );
-
-    Navigator.of(context).pop(reminder);
   }
 
   Future<void> _onDelete() async {
@@ -403,7 +397,7 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('حذف التذكير'),
-        content: const Text('هل أنت متأكد من حذف هذا التذكير؟'),
+        content: Text('هل تريد حذف "${widget.initial?.title ?? ''}"؟'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),

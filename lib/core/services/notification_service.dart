@@ -56,8 +56,8 @@ class NotificationService {
 
     await _plugin.zonedSchedule(
       reminder.id.hashCode.abs(),
-      'تذكير',
       reminder.title,
+      reminder.message,
       when,
       const NotificationDetails(
         android: AndroidNotificationDetails(
