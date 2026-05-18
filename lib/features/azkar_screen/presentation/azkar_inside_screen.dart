@@ -19,7 +19,7 @@ class _AzkarInsideScreenState extends State<AzkarInsideScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:124,left: 18,right: 18),
+      padding: const EdgeInsets.only(top:124,left: 18,right: 18,bottom: 20),
       child: Column(
         crossAxisAlignment: .start,
         children: [
