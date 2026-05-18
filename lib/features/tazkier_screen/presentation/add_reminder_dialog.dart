@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/App_Color.dart';
 
 
-
-
-
-// TODO: pull from core/theme later
 const _brandGreen = AppColors.primary;
 const _lightGreenBg = AppColors.mint;
 

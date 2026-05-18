@@ -1,5 +1,6 @@
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
+import 'package:aqem/features/tazkier_screen/presentation/tazkier_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavCards extends StatelessWidget {
@@ -63,7 +64,11 @@ class NavCards extends StatelessWidget {
                   iconBackgroundColor: _secondaryIconColor(
                     context,
                   ), //onInverseSurface
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => TazkierScreen()),
+                    );
+                  },
                 ),
               ),
             ],
