@@ -152,23 +152,13 @@ class _Header extends StatelessWidget {
                   ),
                 ],
               ),
-              // const Spacer(),
-              // Container(
-              //   width: 36,
-              //   height: 36,
-              //   decoration: BoxDecoration(
-              //     color: Colors.white.withOpacity(0.18),
-              //     shape: BoxShape.circle,
-              //   ),
-              //   // child: const Icon(Icons.settings, color: Colors.white, size: 18),
-              // ),
             ],
           ),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.secondary.withOpacity(0.5),
+              color: AppColors.secondary.withValues(alpha:0.5),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -179,11 +169,8 @@ class _Header extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                 ),
                 const SizedBox(width: 6),
-                Icon(
-                  Icons.location_on,
-                  color: Colors.white.withOpacity(0.9),
-                  size: 16,
-                ),
+                Icon(Icons.location_on,
+                    color: Colors.white.withValues(alpha:0.9), size: 16),
               ],
             ),
           ),
@@ -252,7 +239,7 @@ class _PrayerCardState extends State<_PrayerCard> {
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha:0.05),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -293,7 +280,7 @@ class _PrayerCardState extends State<_PrayerCard> {
                           _countdown(p, widget.display.next!),
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withOpacity(0.85),
+                            color: Colors.white.withValues(alpha:0.85),
                           ),
                         ),
                       )
@@ -346,7 +333,7 @@ class _PrayerCardState extends State<_PrayerCard> {
           child: Switch(
             value: _enabled,
             onChanged: (v) => setState(() => _enabled = v),
-            activeColor: Colors.white,
+            activeThumbColor : Colors.white,
             activeTrackColor: isActive ? AppColors.gold : AppColors.primary,
           ),
         ),
@@ -403,7 +390,7 @@ class _PrayerCardState extends State<_PrayerCard> {
           child: LinearProgressIndicator(
             value: pct,
             minHeight: 6,
-            backgroundColor: Colors.white.withOpacity(0.2),
+            backgroundColor: Colors.white.withValues(alpha:0.2),
             valueColor: AlwaysStoppedAnimation(AppColors.gold),
           ),
         ),

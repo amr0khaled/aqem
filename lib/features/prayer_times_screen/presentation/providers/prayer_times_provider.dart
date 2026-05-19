@@ -1,24 +1,41 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:aqem/features/prayer_times_screen/data/location_service.dart';
 import 'package:aqem/features/prayer_times_screen/data/prayer_times_api.dart';
 import 'package:aqem/features/prayer_times_screen/domain/prayer_times_data.dart';
 
 class PrayerTimesNotifier extends AsyncNotifier<PrayerTimesData> {
   final _api = PrayerTimesApi();
 
-  // Hardcoded for now — Phase 3 replaces this with actual GPS location.
-  static const _defaultAddress = 'Alexandria,Egypt';
-
   @override
   Future<PrayerTimesData> build() async {
-    return _api.fetchToday(address: _defaultAddress);
+    final location = await LocationService.getCurrent();
+    final apiData = await _api.fetchToday(address: location.apiAddress);
+
+    // The API class fills the `location` field with whatever string we
+    // sent it (English). Replace it here with the Arabic display name.
+    return PrayerTimesData(
+      prayers: apiData.prayers,
+      location: location.displayName,
+      weekday: apiData.weekday,
+      gregorianDate: apiData.gregorianDate,
+      hijriDate: apiData.hijriDate,
+    );
   }
 
-  /// Pull-to-refresh or manual reload.
+  /// Re-fetches both location and prayer times. Bound to the
+  /// pull-to-refresh and the retry button.
   Future<void> reload() async {
     state = const AsyncValue.loading();
     try {
-      final data = await _api.fetchToday(address: _defaultAddress);
-      state = AsyncValue.data(data);
+      final location = await LocationService.getCurrent();
+      final apiData = await _api.fetchToday(address: location.apiAddress);
+      state = AsyncValue.data(PrayerTimesData(
+        prayers: apiData.prayers,
+        location: location.displayName,
+        weekday: apiData.weekday,
+        gregorianDate: apiData.gregorianDate,
+        hijriDate: apiData.hijriDate,
+      ));
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
