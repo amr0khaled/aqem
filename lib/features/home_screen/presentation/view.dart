@@ -61,33 +61,3 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-
-// ListView(
-//         children: [
-//           Stack(
-//             children: [
-//               Material(
-//                 color: Colors.transparent,
-//                 child: Ink(
-//                   height: 478,
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(36),
-//                     gradient: LinearGradient(
-//                       colors: [Color(0xff0d7e5e), Color(0xff0a6349)],
-//                       begin: Alignment.topCenter,
-//                       end: Alignment.bottomCenter,
-//                     ),
-//                   ),
-//                   child: HomeAppBar(),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           NextPray(),
-//           Padding(
-//             padding: const EdgeInsets.only(top: 24.0),
-//             child: AyahCard(verse: verses[0]),
-//           ),
-//           Padding(padding: const EdgeInsets.only(top: 24.0), child: NavCards()),
-//         ],
-//       )

@@ -40,39 +40,42 @@ class ApiService {
 }
 
 class PrayerApiService {
- static Future<Map<String, dynamic>> getPrayerTimes(  {String country = "Egypt",
- String city = "Alexandria",
- String state = "",
- int method = 5,
- String date = ""} ) async {
-   final Date = date.isEmpty ? _getCurrentDate() : date;
-   var urlString = 'https://api.aladhan.com/v1/timingsByCity/$Date' '?city=${Uri.encodeComponent(city)}'
-       '&country=${Uri.encodeComponent(country)}';
-   if (state.isNotEmpty) {
-     urlString += '&state=${Uri.encodeComponent(state)}';
-   }
-   urlString += '&method=$method';
-   urlString += '&school=0&midnightMode=0&timezonestring=Africa/Cairo';
-   final url = Uri.parse(urlString);
+  static Future<Map<String, dynamic>> getPrayerTimes({
+    String country = "Egypt",
+    String city = "Alexandria",
+    String state = "",
+    int method = 5,
+    String date = "",
+  }) async {
+    final Date = date.isEmpty ? _getCurrentDate() : date;
+    final addressList = [city, country];
+    if (state != "") {
+      addressList.insert(0, state);
+    }
+    final address = addressList.join(", ");
+
+    var urlString =
+        'https://islamy-backend.vercel.app/api/pray-times/$Date'
+        '?address=${Uri.encodeComponent(address)}';
+    final url = Uri.parse(urlString);
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['code'] == 200 && data['status'] == 'OK') {
-        return data['data']['timings'];
-    }
-    else {
-      throw Exception("API error: ${data['status']}");
-    }}
-     else {
+      if (response.statusCode == 200) {
+        return data['timings'];
+      } else {
+        throw Exception("API error: ${data['status']}");
+      }
+    } else {
       throw Exception("failed to load prayer times");
     }
   }
- static String _getCurrentDate() {
-   final now = DateTime.now();
-   return "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}";
- }
-}
 
+  static String _getCurrentDate() {
+    final now = DateTime.now();
+    return "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}";
+  }
+}
 
 class YoutubeApiService {
   static final String _apiKey = dotenv.get("GOOGLE_API_KEY");

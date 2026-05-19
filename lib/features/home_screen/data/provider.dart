@@ -57,33 +57,49 @@ class PrayerNotifier extends StateNotifier<PrayerState> {
   }
 
   Future<void> loadPrayerTimes() async {
-    try{
+    try {
       final timings = await PrayerApiService.getPrayerTimes(
         country: "Egypt",
         city: "Alexandria",
         method: 5,
       );
-    final prayers = [
-      PrayerTime(type: PrayerType.fajr, name: "الفجر", time: timings['Fajr']),
-      PrayerTime(type: PrayerType.sunrise, name: "الشروق", time: timings['Sunrise']??"",),
-      PrayerTime(type: PrayerType.dhohr, name: "الظهر", time: timings['Dhuhr']??""),
-      PrayerTime(type: PrayerType.asr, name: "العصر", time: timings['Asr']??""),
-      PrayerTime(type: PrayerType.maghreb, name: "المغرب", time: timings['Maghrib']??"",),
-      PrayerTime(type: PrayerType.isha, name: "العشاء", time: timings['Isha']),
-    ];
+      final prayers = [
+        PrayerTime(type: PrayerType.fajr, name: "الفجر", time: timings['Fajr']),
+        PrayerTime(
+          type: PrayerType.sunrise,
+          name: "الشروق",
+          time: timings['Sunrise'] ?? "",
+        ),
+        PrayerTime(
+          type: PrayerType.dhohr,
+          name: "الظهر",
+          time: timings['Dhuhr'] ?? "",
+        ),
+        PrayerTime(
+          type: PrayerType.asr,
+          name: "العصر",
+          time: timings['Asr'] ?? "",
+        ),
+        PrayerTime(
+          type: PrayerType.maghreb,
+          name: "المغرب",
+          time: timings['Maghrib'] ?? "",
+        ),
+        PrayerTime(
+          type: PrayerType.isha,
+          name: "العشاء",
+          time: timings['Isha'],
+        ),
+      ];
 
-    state = state.copyWith(prayers: prayers, isLoading: false,
-      error: null,);
-    _updatePrayerData();
-    _startTimer();
-  }
-    catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(prayers: prayers, isLoading: false, error: null);
+      _updatePrayerData();
+      _startTimer();
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
+
   void _startTimer() {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -102,10 +118,14 @@ class PrayerNotifier extends StateNotifier<PrayerState> {
       if (prayerTime.isAfter(now)) {
         final remaining = prayerTime.difference(now);
         final previousPrayerTime = i == 0
-            ? _parsePrayerTime(prayers.last.time).subtract(const Duration(days: 1))
+            ? _parsePrayerTime(
+                prayers.last.time,
+              ).subtract(const Duration(days: 1))
             : _parsePrayerTime(prayers[i - 1].time);
 
-        final totalSeconds = prayerTime.difference(previousPrayerTime).inSeconds;
+        final totalSeconds = prayerTime
+            .difference(previousPrayerTime)
+            .inSeconds;
         final passedSeconds = now.difference(previousPrayerTime).inSeconds;
         final progress = totalSeconds > 0 ? passedSeconds / totalSeconds : 0.0;
         state = state.copyWith(
@@ -118,7 +138,9 @@ class PrayerNotifier extends StateNotifier<PrayerState> {
     }
 
     final nextPrayer = prayers.first;
-    final fajrTomorrow = _parsePrayerTime(prayers.first.time).add(const Duration(days: 1));
+    final fajrTomorrow = _parsePrayerTime(
+      prayers.first.time,
+    ).add(const Duration(days: 1));
     final remaining = fajrTomorrow.difference(now);
 
     state = state.copyWith(
@@ -152,7 +174,10 @@ class PrayerNotifier extends StateNotifier<PrayerState> {
     super.dispose();
   }
 }
-final prayerProvider = StateNotifierProvider<PrayerNotifier, PrayerState>((ref) {
+
+final prayerProvider = StateNotifierProvider<PrayerNotifier, PrayerState>((
+  ref,
+) {
   return PrayerNotifier();
 });
 final remainingTextProvider = Provider<String>((ref) {
