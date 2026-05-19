@@ -1,5 +1,6 @@
 import 'package:aqem/core/theme/App_Color.dart';
 import 'package:aqem/features/QuranLearning/Quranpage.dart';
+import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/_onboarding_section.dart.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/button.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/circle_widget.dart';
@@ -62,13 +63,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       });
     } else {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isFirstTime', false);
+      await prefs.setBool('isFirstTime', true);
 
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const HomeView()),
       );
     }
   }
@@ -119,10 +120,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
                 SizedBox(height: 30.h),
 
-                Indicator(
-                  index: index,
-                  activeColor: current.color,
-                ),
+                Indicator(index: index, activeColor: current.color),
 
                 const Expanded(flex: 3, child: SizedBox()),
 
@@ -148,3 +146,4 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 }
+

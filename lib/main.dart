@@ -18,13 +18,16 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [sharedPrefsProvider.overrideWithValue(prefs)],
-      child: const AqmApp(),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: const AqemApp(),
+      ),
     ),
   );
 }
 
-class AqmApp extends StatelessWidget {
-  const AqmApp({super.key});
+class AqemApp extends StatelessWidget {
+  const AqemApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,4 +44,7 @@ class AqmApp extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> basmala-modification

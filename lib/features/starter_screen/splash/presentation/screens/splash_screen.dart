@@ -1,7 +1,6 @@
-
 import 'dart:async';
 import 'package:aqem/core/theme/App_Color.dart';
-import 'package:aqem/features/QuranLearning/Quranpage.dart';
+import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/screen/_onboarding_screen.dart.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/circle_widget.dart';
 import 'package:flutter/material.dart';
@@ -29,21 +28,9 @@ class CircleData {
 
 class _SplashScreenState extends State<SplashScreen> {
   final List<CircleData> _circles = const [
-    CircleData(
-      alignment: Alignment(-0.8, -0.9),
-      size: 90,
-      opacity: 0.15,
-    ),
-    CircleData(
-      alignment: Alignment(0, 0.02),
-      size: 215,
-      opacity: 0.08,
-    ),
-    CircleData(
-      alignment: Alignment(0.8, 0.9),
-      size: 105,
-      opacity: 0.15,
-    ),
+    CircleData(alignment: Alignment(-0.8, -0.9), size: 90, opacity: 0.15),
+    CircleData(alignment: Alignment(0, 0.02), size: 215, opacity: 0.08),
+    CircleData(alignment: Alignment(0.8, 0.9), size: 105, opacity: 0.15),
   ];
 
   @override
@@ -55,18 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _navigateAfterSplash() async {
     await Future.delayed(const Duration(seconds: 3));
 
-    final prefs = await SharedPreferences.getInstance();    // Get saved local preferences
+    final prefs =
+        await SharedPreferences.getInstance(); // Get saved local preferences
 
-    final isFirstTime = prefs.getBool('isFirstTime') ?? true;    // Get saved local preferences
+    final isFirstTime = true;
+    prefs.getBool('isFirstTime') ?? true; // Get saved local preferences
 
-    if (!mounted) return;  // Prevent navigation if widget removed from tree
+    if (!mounted) return; // Prevent navigation if widget removed from tree
 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => isFirstTime
-            ? const OnboardingScreen()
-            : const HomeScreen(),
+        builder: (_) =>
+            isFirstTime ? const OnboardingScreen() : const HomeView(),
       ),
     );
   }
@@ -76,10 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF0D7E5E),
-              Color(0xFF0A6349),
-            ],
+            colors: [Color(0xFF0D7E5E), Color(0xFF0A6349)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -114,9 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
           height: 6.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.gold.withValues(
-              alpha: i == 1 ? 1 : 0.4,
-            ),
+            color: AppColors.gold.withValues(alpha: i == 1 ? 1 : 0.4),
           ),
         ),
       ),
@@ -160,10 +143,7 @@ class _SplashScreenState extends State<SplashScreen> {
           const Text(
             "سورة النساء - آية 103",
             textDirection: TextDirection.rtl,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.white70,
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.white70),
           ),
 
           SizedBox(height: 36.h),
@@ -178,11 +158,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: [
-          _buildBackground(),
-          _buildCircles(),
-          _buildContent(),
-        ],
+        children: [_buildBackground(), _buildCircles(), _buildContent()],
       ),
     );
   }
@@ -270,10 +246,7 @@ class StarBoxWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0x26FFFFFF),
               borderRadius: BorderRadius.circular(20.w),
-              border: Border.all(
-                color: AppColors.gold,
-                width: 2,
-              ),
+              border: Border.all(color: AppColors.gold, width: 2),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.gold.withValues(alpha: 0.24),
@@ -283,11 +256,7 @@ class StarBoxWidget extends StatelessWidget {
               ],
             ),
             child: const Center(
-              child: Icon(
-                Icons.star,
-                color: AppColors.gold,
-                size: 45,
-              ),
+              child: Icon(Icons.star, color: AppColors.gold, size: 45),
             ),
           ),
         ],
@@ -325,28 +294,16 @@ class CornerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             top: top
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
             bottom: bottom
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
             left: left
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
             right: right
-                ? BorderSide(
-                    color: color,
-                    width: borderWidth.w,
-                  )
+                ? BorderSide(color: color, width: borderWidth.w)
                 : BorderSide.none,
           ),
         ),
