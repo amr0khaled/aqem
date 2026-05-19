@@ -1,5 +1,4 @@
 import 'package:aqem/core/theme/App_Color.dart';
-import 'package:aqem/features/QuranLearning/Quranpage.dart';
 import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/_onboarding_section.dart.dart';
 import 'package:aqem/features/starter_screen/onboarding/presentarion/widget/button.dart';

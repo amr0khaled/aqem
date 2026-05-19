@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/App_Color.dart';
 import 'package:aqem/features/tazkier_screen/domain/reminder.dart';
@@ -6,11 +7,7 @@ import 'package:aqem/features/tazkier_screen/presentation/reminder_options.dart'
 class AddReminderDialog extends StatefulWidget {
   final Reminder? initial;
   final VoidCallback? onDelete;
-  const AddReminderDialog({
-    super.key,
-    this.initial,
-    this.onDelete,
-  });
+  const AddReminderDialog({super.key, this.initial, this.onDelete});
 
   @override
   State<AddReminderDialog> createState() => _AddReminderDialogState();
@@ -62,41 +59,46 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     super.dispose();
   }
 
+  bool isDark =
+      PlatformDispatcher.instance.platformBrightness == Brightness.dark;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
       insetPadding: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 480,
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _header(),
-                const SizedBox(height: 16),
-                _field('عنوان التذكير', _titleInput()),
-                const SizedBox(height: 12),
-                _field('رسالة الإشعار (اختياري)', _messageInput()),
-                const SizedBox(height: 16),
-                _field('وقت التذكير', _timePicker(context)),
-                const SizedBox(height: 16),
-                _field('اختر الأيقونة', _iconGrid()),
-                const SizedBox(height: 16),
-                _field('اختر اللون', _colorRow()),
-                const SizedBox(height: 20),
-                _repeatRow(),
-                const SizedBox(height: 16),
-                _preview(),
-                const SizedBox(height: 20),
-                _actions(),
-              ],
+      child: DefaultTextStyle(
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 480,
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _header(),
+                  const SizedBox(height: 16),
+                  _field('عنوان التذكير', _titleInput()),
+                  const SizedBox(height: 12),
+                  _field('رسالة الإشعار (اختياري)', _messageInput()),
+                  const SizedBox(height: 16),
+                  _field('وقت التذكير', _timePicker(context)),
+                  const SizedBox(height: 16),
+                  _field('اختر الأيقونة', _iconGrid()),
+                  const SizedBox(height: 16),
+                  _field('اختر اللون', _colorRow()),
+                  const SizedBox(height: 20),
+                  _repeatRow(),
+                  const SizedBox(height: 16),
+                  _preview(),
+                  const SizedBox(height: 20),
+                  _actions(),
+                ],
+              ),
             ),
           ),
         ),
@@ -130,10 +132,7 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     children: [
       Padding(
         padding: const EdgeInsets.only(right: 4, bottom: 6),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 13, color: Colors.black54),
-        ),
+        child: Text(label, style: const TextStyle(fontSize: 13)),
       ),
       child,
     ],
@@ -143,7 +142,6 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     hintText: hint,
     hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
     filled: true,
-    fillColor: Colors.white,
     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
     border: _border(Colors.grey.shade300),
     enabledBorder: _border(Colors.grey.shade300),
@@ -174,7 +172,6 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -207,16 +204,32 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
           width: 54,
           height: 50,
           decoration: BoxDecoration(
-            color: selected ? AppColors.mint : Colors.white,
+            color: selected
+                ? (isDark
+                      ? ColorScheme.fromSeed(seedColor: AppColors.mint).primary
+                      : AppColors.mint)
+                : (isDark ? Colors.black : Colors.white),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: selected ? AppColors.primary : Colors.grey.shade300,
+              color: selected
+                  ? (isDark
+                        ? ColorScheme.fromSeed(
+                            seedColor: AppColors.primary,
+                          ).primary
+                        : AppColors.primary)
+                  : (isDark ? Colors.grey.shade800 : Colors.grey.shade300),
               width: selected ? 1.5 : 1,
             ),
           ),
           child: Icon(
             availableIcons[i],
-            color: selected ? AppColors.primary : Colors.black54,
+            color: selected
+                ? (isDark
+                      ? ColorScheme.fromSeed(
+                          seedColor: AppColors.primary,
+                        ).onPrimary
+                      : AppColors.primary)
+                : (isDark ? Colors.grey.shade300 : Colors.black54),
             size: 22,
           ),
         ),
@@ -248,7 +261,7 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
   Widget _repeatRow() => Container(
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
     decoration: BoxDecoration(
-      color: Colors.grey.shade100,
+      border: Border.all(color: Colors.grey.shade300),
       borderRadius: BorderRadius.circular(14),
     ),
     child: Row(
@@ -258,7 +271,7 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
         Switch(
           value: _dailyRepeat,
           onChanged: (v) => setState(() => _dailyRepeat = v),
-          activeThumbColor : Colors.white,
+          activeThumbColor: Colors.white,
           activeTrackColor: AppColors.primary,
         ),
       ],
@@ -269,20 +282,22 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     padding: const EdgeInsets.all(14),
     decoration: BoxDecoration(
       gradient: LinearGradient(
-        colors: [AppColors.mint, Colors.white],
+        colors: Theme.of(context).brightness == Brightness.dark
+            ? [
+                ColorScheme.fromSeed(seedColor: AppColors.mint).primary,
+                Colors.black12,
+              ]
+            : [AppColors.mint, Colors.white],
         begin: Alignment.bottomLeft,
         end: Alignment.topRight,
       ),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.primary.withValues(alpha:0.2)),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'معاينة التذكير',
-          style: TextStyle(fontSize: 11, color: Colors.black54),
-        ),
+        const Text('معاينة التذكير', style: TextStyle(fontSize: 11)),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -316,7 +331,12 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
                   const SizedBox(height: 4),
                   Text(
                     _formattedTime,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    style: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha(120),
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -340,7 +360,10 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
               borderRadius: BorderRadius.circular(14),
             ),
           ),
-          child: const Text('إلغاء', style: TextStyle(color: Colors.black)),
+          child: Text(
+            'إلغاء',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
         ),
       ),
       const SizedBox(width: 10),
@@ -378,7 +401,8 @@ class _AddReminderDialogState extends State<AddReminderDialog> {
     final message = _messageController.text.trim();
     Navigator.of(context).pop(
       Reminder(
-        id: widget.initial?.id ??
+        id:
+            widget.initial?.id ??
             DateTime.now().millisecondsSinceEpoch.toString(),
         title: title,
         message: message.isEmpty ? null : message,

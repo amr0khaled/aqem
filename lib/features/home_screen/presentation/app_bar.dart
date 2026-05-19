@@ -27,6 +27,7 @@ class _HomeAppBar extends ConsumerState<HomeAppBar> {
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(color: Colors.transparent),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,

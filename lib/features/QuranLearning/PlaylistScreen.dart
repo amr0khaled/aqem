@@ -16,7 +16,8 @@ class PlaylistScreen extends ConsumerStatefulWidget {
 }
 
 class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
-  AsyncValue<YoutubeResponse<PlaylistItem>>? service;
+  AsyncValue<YoutubeResponse<PlaylistItem>> service =
+      const AsyncValue.loading();
   String? token;
   int? max;
   int itemsLength = 0;
@@ -43,7 +44,6 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 248, 247, 244),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(90),
         child: Container(
@@ -62,11 +62,7 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
             child: Text(
               widget.name,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
           ),
         ),
@@ -91,7 +87,6 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                               horizontal: 24,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
                                   offset: Offset(0, 2),
@@ -111,7 +106,6 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                                   style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF1A1A1A),
                                   ),
                                 ),
                                 Text(
@@ -119,11 +113,9 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                                   style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF1A1A1A),
                                   ),
                                 ),
                                 LinearProgressIndicator(
-                                  backgroundColor: Colors.black12,
                                   value: percentage,
                                   valueColor: AlwaysStoppedAnimation(
                                     Color.fromARGB(255, 13, 126, 94),
@@ -136,7 +128,6 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                           SizedBox(height: 10),
                           Divider(
                             thickness: 2,
-                            color: Colors.black12,
                             radius: BorderRadius.circular(8),
                           ),
                           SizedBox(height: 10),
@@ -161,7 +152,6 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                                   126,
                                   94,
                                 ),
-                                foregroundColor: Colors.white,
                                 minimumSize: Size(con.maxWidth - 24, 56),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
@@ -173,6 +163,7 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -198,7 +189,7 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
 
   Widget _playlistItems() {
     return Container(
-      child: service?.when(
+      child: service.when(
         data: (data) {
           return Wrap(
             alignment: WrapAlignment.start,
@@ -214,12 +205,14 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
               return Material(
                 elevation: 6,
                 color: Colors.transparent,
-                shadowColor: Colors.black38,
+                shadowColor: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withAlpha(10),
                 borderRadius: BorderRadius.circular(16),
                 child: ListTile(
                   style: ListTileStyle.list,
-                  tileColor: Colors.white,
                   enableFeedback: true,
+                  tileColor: Theme.of(context).colorScheme.surfaceContainer,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -228,7 +221,6 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A1A1A),
                     ),
                   ),
 

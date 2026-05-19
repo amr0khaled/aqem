@@ -16,48 +16,54 @@ class PrayerTimesScreen extends ConsumerWidget {
     final asyncData = ref.watch(prayerTimesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: SafeArea(
-        child: asyncData.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                  const SizedBox(height: 12),
-                  Text(
-                    'تعذّر تحميل مواقيت الصلاة\n$e',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () =>
-                        ref.read(prayerTimesProvider.notifier).reload(),
-                    child: const Text('إعادة المحاولة'),
-                  ),
-                ],
+      body: DefaultTextStyle(
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        child: SafeArea(
+          child: asyncData.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      size: 48,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'تعذّر تحميل مواقيت الصلاة\n$e',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () =>
+                          ref.read(prayerTimesProvider.notifier).reload(),
+                      child: const Text('إعادة المحاولة'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          data: (data) => RefreshIndicator(
-            onRefresh: () => ref.read(prayerTimesProvider.notifier).reload(),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  _Header(data: data),
-                  const SizedBox(height: 16),
-                  for (final d in _computeDisplays(
-                    data.prayers,
-                    DateTime.now(),
-                  ))
-                    _PrayerCard(display: d),
-                ],
+            data: (data) => RefreshIndicator(
+              onRefresh: () => ref.read(prayerTimesProvider.notifier).reload(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _Header(data: data),
+                    const SizedBox(height: 16),
+                    for (final d in _computeDisplays(
+                      data.prayers,
+                      DateTime.now(),
+                    ))
+                      _PrayerCard(display: d),
+                  ],
+                ),
               ),
             ),
           ),
@@ -158,7 +164,7 @@ class _Header extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.secondary.withValues(alpha:0.5),
+              color: AppColors.secondary.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -169,8 +175,11 @@ class _Header extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                 ),
                 const SizedBox(width: 6),
-                Icon(Icons.location_on,
-                    color: Colors.white.withValues(alpha:0.9), size: 16),
+                Icon(
+                  Icons.location_on,
+                  color: Colors.white.withValues(alpha: 0.9),
+                  size: 16,
+                ),
               ],
             ),
           ),
@@ -226,20 +235,24 @@ class _PrayerCardState extends State<_PrayerCard> {
   Widget build(BuildContext context) {
     final p = widget.display.prayer;
     final isActive = widget.display.status == _Status.active;
-    final fg = isActive ? Colors.white : Colors.black87;
+    final fg = isActive
+        ? Theme.of(context).colorScheme.tertiary
+        : Theme.of(context).colorScheme.onSurface;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isActive ? AppColors.primary : Colors.white,
+        color: isActive
+            ? AppColors.primary
+            : Theme.of(context).colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(18),
         border: isActive ? Border.all(color: AppColors.gold, width: 1.5) : null,
         boxShadow: isActive
             ? null
             : [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha:0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -278,19 +291,13 @@ class _PrayerCardState extends State<_PrayerCard> {
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
                           _countdown(p, widget.display.next!),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white.withValues(alpha:0.85),
-                          ),
+                          style: TextStyle(fontSize: 12),
                         ),
                       )
                     else if (widget.display.status == _Status.upcoming)
                       const Padding(
                         padding: EdgeInsets.only(top: 2),
-                        child: Text(
-                          'قادمة',
-                          style: TextStyle(fontSize: 11, color: Colors.black54),
-                        ),
+                        child: Text('قادمة', style: TextStyle(fontSize: 11)),
                       ),
                   ],
                 ),
@@ -324,7 +331,9 @@ class _PrayerCardState extends State<_PrayerCard> {
       children: [
         Icon(
           Icons.notifications_none,
-          color: isActive ? Colors.white : Colors.black54,
+          color: isActive
+              ? Theme.of(context).colorScheme.onTertiary
+              : Theme.of(context).colorScheme.onSurface,
           size: 18,
         ),
         const SizedBox(width: 4),
@@ -333,15 +342,19 @@ class _PrayerCardState extends State<_PrayerCard> {
           child: Switch(
             value: _enabled,
             onChanged: (v) => setState(() => _enabled = v),
-            activeThumbColor : Colors.white,
-            activeTrackColor: isActive ? AppColors.gold : AppColors.primary,
+            activeThumbColor: Colors.white,
+            activeTrackColor: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.secondary,
           ),
         ),
         Text(
           'مفعل',
           style: TextStyle(
             fontSize: 10,
-            color: isActive ? Colors.white70 : Colors.black54,
+            color: isActive
+                ? Theme.of(context).colorScheme.onTertiary
+                : Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ],
@@ -390,7 +403,7 @@ class _PrayerCardState extends State<_PrayerCard> {
           child: LinearProgressIndicator(
             value: pct,
             minHeight: 6,
-            backgroundColor: Colors.white.withValues(alpha:0.2),
+            backgroundColor: Colors.white.withValues(alpha: 0.2),
             valueColor: AlwaysStoppedAnimation(AppColors.gold),
           ),
         ),
@@ -398,4 +411,3 @@ class _PrayerCardState extends State<_PrayerCard> {
     );
   }
 }
-

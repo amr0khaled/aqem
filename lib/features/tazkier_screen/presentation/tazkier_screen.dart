@@ -14,7 +14,6 @@ class TazkierScreen extends ConsumerWidget {
     final asyncReminders = ref.watch(remindersProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -36,7 +35,7 @@ class TazkierScreen extends ConsumerWidget {
                           child: Center(
                             child: Text(
                               'لا توجد تذكيرات بعد',
-                              style: TextStyle(color: Colors.black54),
+                              style: TextStyle(),
                             ),
                           ),
                         )
@@ -154,7 +153,7 @@ class _AddNewButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: onTap,
@@ -191,41 +190,50 @@ class _TipCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.beige,
+        color: ColorScheme.fromSeed(
+          seedColor: AppColors.beige,
+        ).primaryContainer,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'نصيحة',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  'المداومة على الأذكار اليومية تجلب السكينة والطمأنينة '
-                  'للقلب. احرص على تفعيل التذكيرات لتبقى على اتصال دائم بالله.',
-                  style: TextStyle(fontSize: 13, height: 1.6),
-                ),
-              ],
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: ColorScheme.fromSeed(
+            seedColor: AppColors.beige,
+          ).onPrimaryContainer,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'نصيحة',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'المداومة على الأذكار اليومية تجلب السكينة والطمأنينة '
+                    'للقلب. احرص على تفعيل التذكيرات لتبقى على اتصال دائم بالله.',
+                    style: TextStyle(fontSize: 13, height: 1.6),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            width: 36,
-            height: 36,
-            decoration: const BoxDecoration(
-              color: AppColors.gold,
-              shape: BoxShape.circle,
+            const SizedBox(width: 12),
+            Container(
+              width: 36,
+              height: 36,
+              decoration: const BoxDecoration(
+                color: AppColors.gold,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.lightbulb, color: Colors.white, size: 20),
             ),
-            child: const Icon(Icons.lightbulb, color: Colors.white, size: 20),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

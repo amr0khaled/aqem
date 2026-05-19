@@ -16,7 +16,7 @@ class _AyahListTileState extends State<AyahListTile> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      color: isDark ? Colors.grey.shade900 : Colors.white,
+      color: Theme.of(context).colorScheme.tertiaryContainer,
       child: Material(
         color: Colors.transparent,
         child: ListTile(

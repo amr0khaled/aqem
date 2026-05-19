@@ -13,7 +13,6 @@ class HomeView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // 1. BACKGROUND CONTAINER (Painted first, sits underneath)
             Material(
               color: Colors.transparent,
               child: Ink(
@@ -33,7 +32,6 @@ class HomeView extends StatelessWidget {
               ),
             ),
 
-            // 2. FOREGROUND CONTENT (Painted second, sits on top)
             Padding(
               // top: 418 creates a 60px overlap area over the 478px background
               padding: const EdgeInsets.only(top: 150, left: 16.0, right: 16.0),

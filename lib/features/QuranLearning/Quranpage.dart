@@ -159,116 +159,120 @@ class QuranPageScreen extends ConsumerState<QuranPage> {
   ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-      child: Column(
-        children: categorized.entries.map((languageEntry) {
-          final language = languageEntry.key;
-          final functions = languageEntry.value;
-          return Card(
-            margin: const EdgeInsets.only(bottom: 16),
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: ExpansionTile(
-              initiallyExpanded: _expandedLanguages.contains(language),
-              onExpansionChanged: (expanded) {
-                setState(() {
-                  if (expanded) {
-                    _expandedLanguages.add(language);
-                  } else {
-                    _expandedLanguages.remove(language);
-                  }
-                });
-              },
-              tilePadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 8,
+      child: DefaultTextStyle(
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        child: Column(
+          children: categorized.entries.map((languageEntry) {
+            final language = languageEntry.key;
+            final functions = languageEntry.value;
+            return Card(
+              margin: const EdgeInsets.only(bottom: 16),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-              title: Row(
-                children: [
-                  Icon(
-                    language == 'العربية' ? Icons.language : Icons.public,
-                    color: const Color(0xFF00897B),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    language,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF00897B),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '(${_totalCount(functions)})',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                ],
-              ),
-              children: functions.entries.map((functionEntry) {
-                final function = functionEntry.key;
-                final playlists = functionEntry.value;
-                final functionName = PlaylistCategorizer.getFunctionName(
-                  function,
-                  language,
-                );
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: ExpansionTile(
+                shape: Border(),
+                expansionAnimationStyle: AnimationStyle(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  reverseCurve: Curves.easeIn,
+                ),
+                initiallyExpanded: _expandedLanguages.contains(language),
+                onExpansionChanged: (expanded) {
+                  setState(() {
+                    if (expanded) {
+                      _expandedLanguages.add(language);
+                    } else {
+                      _expandedLanguages.remove(language);
+                    }
+                  });
+                },
+                tilePadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
+                title: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        top: 16,
-                        bottom: 12,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            _getFunctionIcon(function),
-                            size: 20,
-                            color: Colors.grey.shade700,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            functionName,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade800,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '(${playlists.length})',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
+                    Icon(
+                      language == 'العربية' ? Icons.language : Icons.public,
+                      color: const Color(0xFF00897B),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      language,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF00897B),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        children: playlists.map((playlist) {
-                          return _buildVideoCard(playlist);
-                        }).toList(),
+                    const SizedBox(width: 8),
+                    Text(
+                      '(${_totalCount(functions)})',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    if (function != functions.keys.last)
-                      const Divider(height: 8, indent: 20, endIndent: 20),
                   ],
-                );
-              }).toList(),
-            ),
-          );
-        }).toList(),
+                ),
+                children: functions.entries.map((functionEntry) {
+                  final function = functionEntry.key;
+                  final playlists = functionEntry.value;
+                  final functionName = PlaylistCategorizer.getFunctionName(
+                    function,
+                    language,
+                  );
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          top: 16,
+                          bottom: 12,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(_getFunctionIcon(function), size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              functionName,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '(${playlists.length})',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          children: playlists.map((playlist) {
+                            return _buildVideoCard(playlist);
+                          }).toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      if (function != functions.keys.last)
+                        const Divider(height: 8, indent: 20, endIndent: 20),
+                    ],
+                  );
+                }).toList(),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

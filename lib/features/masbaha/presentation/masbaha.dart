@@ -1,34 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
-
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    ),
-  );
-  runApp(const TasbihApp());
-}
-
-class TasbihApp extends StatelessWidget {
-  const TasbihApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'المسبحة الإلكترونية',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Amiri',
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2D7A52)),
-        useMaterial3: true,
-      ),
-      home: const TasbihScreen(),
-    );
-  }
-}
 
 // ─── Data Model ──────────────────────────────────────────────────────────────
 
@@ -115,6 +89,8 @@ class _TasbihScreenState extends State<TasbihScreen>
   static const Color textMid = Color(0xFF4A6355);
   static const Color textLight = Color(0xFF8AAA95);
 
+  final isDark =
+      PlatformDispatcher.instance.platformBrightness == Brightness.dark;
   @override
   void initState() {
     super.initState();
@@ -140,9 +116,10 @@ class _TasbihScreenState extends State<TasbihScreen>
       TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 1),
     ]).animate(CurvedAnimation(parent: _bumpController, curve: Curves.easeOut));
 
-    _pulseAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeOut),
-    );
+    _pulseAnim = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
   }
 
   @override
@@ -168,12 +145,10 @@ class _TasbihScreenState extends State<TasbihScreen>
   }
 
   void _animateProgress(double target) {
-    _progressAnim = Tween<double>(
-      begin: _previousProgress,
-      end: target,
-    ).animate(
-      CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
-    );
+    _progressAnim = Tween<double>(begin: _previousProgress, end: target)
+        .animate(
+          CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
+        );
     _progressController.forward(from: 0);
     _previousProgress = target;
   }
@@ -213,7 +188,6 @@ class _TasbihScreenState extends State<TasbihScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
       body: Column(
         children: [
           _buildHeader(),
@@ -240,31 +214,39 @@ class _TasbihScreenState extends State<TasbihScreen>
     return SizedBox.fromSize(
       size: Size.fromHeight(120),
       child: Container(
-        color: greenDark,
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0D7E5E), Color(0xFF0D7E5E), Color(0xFF0A6349)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'المسبحة الإلكترونية',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Amiri',
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        child: SafeArea(
+          child: Row(
+            children: [
+              BackButton(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'المسبحة الإلكترونية',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'سبّح واذكر الله في كل وقت',
+                    style: TextStyle(color: Color(0xBBFFFFFF), fontSize: 13),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              'سبّح واذكر الله في كل وقت',
-              style: TextStyle(
-                color: Color(0xBBFFFFFF),
-                fontSize: 13,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -274,7 +256,6 @@ class _TasbihScreenState extends State<TasbihScreen>
 
   Widget _buildTabs() {
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
       child: GridView.count(
         crossAxisCount: 2,
@@ -290,10 +271,11 @@ class _TasbihScreenState extends State<TasbihScreen>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               decoration: BoxDecoration(
-                color: isActive ? Colors.white : const Color(0xFFF0F4F1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isActive ? greenMain : Colors.transparent,
+                  color: isActive
+                      ? greenMain
+                      : Theme.of(context).colorScheme.onSurface.withAlpha(60),
                   width: 2,
                 ),
               ),
@@ -303,12 +285,7 @@ class _TasbihScreenState extends State<TasbihScreen>
                 children: [
                   Text(
                     dhikrList[i].name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Amiri',
-                      fontWeight: FontWeight.w600,
-                      color: isActive ? greenDark : textMid,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   if (isActive)
                     Container(
@@ -335,7 +312,6 @@ class _TasbihScreenState extends State<TasbihScreen>
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -355,7 +331,6 @@ class _TasbihScreenState extends State<TasbihScreen>
               current.name,
               key: ValueKey(_selectedIndex),
               style: const TextStyle(
-                fontFamily: 'Amiri',
                 fontSize: 30,
                 fontStyle: FontStyle.italic,
                 color: greenMain,
@@ -397,8 +372,9 @@ class _TasbihScreenState extends State<TasbihScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: greenMain.withValues(alpha:
-                        (1 - _pulseAnim.value).clamp(0, 1) * 0.4),
+                    color: greenMain.withValues(
+                      alpha: (1 - _pulseAnim.value).clamp(0, 1) * 0.4,
+                    ),
                     width: 3,
                   ),
                 ),
@@ -414,8 +390,10 @@ class _TasbihScreenState extends State<TasbihScreen>
                 size: const Size(180, 180),
                 painter: CircleProgressPainter(
                   progress: _progressAnim.value,
-                  bgColor: const Color(0xFFE8F0EB),
-                  fgColor: greenMain,
+                  bgColor: isDark
+                      ? Theme.of(context).colorScheme.onSurface.withAlpha(120)
+                      : const Color(0xFFE8F0EB),
+                  fgColor: Theme.of(context).colorScheme.onTertiary,
                   strokeWidth: 10,
                 ),
               );
@@ -429,20 +407,16 @@ class _TasbihScreenState extends State<TasbihScreen>
               AnimatedBuilder(
                 animation: _bumpAnim,
                 builder: (context, child) {
-                  return Transform.scale(
-                    scale: _bumpAnim.value,
-                    child: child,
-                  );
+                  return Transform.scale(scale: _bumpAnim.value, child: child);
                 },
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 100),
                   child: Text(
                     '$count',
                     key: ValueKey('$_selectedIndex-$count'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 52,
                       fontWeight: FontWeight.w700,
-                      color: textDark,
                       height: 1,
                     ),
                   ),
@@ -451,7 +425,7 @@ class _TasbihScreenState extends State<TasbihScreen>
               const SizedBox(height: 4),
               Text(
                 'من ${current.target}',
-                style: const TextStyle(fontSize: 13, color: textLight),
+                style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 6),
               // Gold progress bar
@@ -465,9 +439,12 @@ class _TasbihScreenState extends State<TasbihScreen>
                       height: 4,
                       child: LinearProgressIndicator(
                         value: _progressAnim.value,
-                        backgroundColor: const Color(0xFFE8F0EB),
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(gold),
+                        backgroundColor: isDark
+                            ? Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(120)
+                            : const Color(0xFFE8F0EB),
+                        valueColor: const AlwaysStoppedAnimation<Color>(gold),
                       ),
                     ),
                   );
@@ -494,12 +471,12 @@ class _TasbihScreenState extends State<TasbihScreen>
             color: greenMain,
             boxShadow: [
               BoxShadow(
-                color: greenMain.withValues(alpha:0.35),
+                color: greenMain.withValues(alpha: 0.35),
                 blurRadius: 24,
                 offset: const Offset(0, 6),
               ),
               BoxShadow(
-                color: greenMain.withValues(alpha:0.2),
+                color: greenMain.withValues(alpha: 0.2),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -517,7 +494,7 @@ class _TasbihScreenState extends State<TasbihScreen>
                   height: 30,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha:0.18),
+                    color: Colors.white.withValues(alpha: 0.18),
                   ),
                 ),
               ),
@@ -529,17 +506,13 @@ class _TasbihScreenState extends State<TasbihScreen>
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 19,
-                      fontFamily: 'Amiri',
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   SizedBox(height: 2),
                   Text(
                     'اضغط للعد',
-                    style: TextStyle(
-                      color: Color(0xCCFFFFFF),
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: Color(0xCCFFFFFF), fontSize: 11),
                   ),
                 ],
               ),
@@ -565,10 +538,15 @@ class _TasbihScreenState extends State<TasbihScreen>
             GestureDetector(
               onTap: _resetCurrent,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFD0DDD5), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFFD0DDD5),
+                    width: 1.5,
+                  ),
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
@@ -576,8 +554,10 @@ class _TasbihScreenState extends State<TasbihScreen>
                   children: const [
                     Icon(Icons.refresh, size: 16, color: textMid),
                     SizedBox(width: 4),
-                    Text('إعادة تعيين',
-                        style: TextStyle(fontSize: 13, color: textMid)),
+                    Text(
+                      'إعادة تعيين',
+                      style: TextStyle(fontSize: 13, color: textMid),
+                    ),
                   ],
                 ),
               ),
@@ -599,11 +579,7 @@ class _TasbihScreenState extends State<TasbihScreen>
           child: Text(
             value,
             key: ValueKey(value),
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: textDark,
-            ),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
           ),
         ),
         const SizedBox(height: 2),
@@ -655,7 +631,6 @@ class _TasbihScreenState extends State<TasbihScreen>
               current.virtue,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontFamily: 'Amiri',
                 fontSize: 17,
                 color: Color(0xFF5C4A1A),
                 height: 1.9,

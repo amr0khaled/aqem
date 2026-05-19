@@ -72,7 +72,6 @@ class _AzkarScreenState extends State<AzkarScreen> {
     return Directionality(
       textDirection: .rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
         appBar: AppBar(
           leading: BackButton(
             color: Colors.white,

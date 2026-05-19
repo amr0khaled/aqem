@@ -113,7 +113,7 @@ class NavCards extends StatelessWidget {
           onCardTap: () {
             Navigator.of(
               context,
-            ).push(MaterialPageRoute(builder: (context) => TasbihApp()));
+            ).push(MaterialPageRoute(builder: (context) => TasbihScreen()));
           },
         ),
         SizedBox(height: 12),

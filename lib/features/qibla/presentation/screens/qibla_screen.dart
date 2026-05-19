@@ -45,22 +45,21 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen> {
     _handleAlignment(isAligned);
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _header(qiblaState),
-              const SizedBox(height: 20),
-              CompassView(compassAngle: compassRad, arrowAngle: arrowRad),
-              const SizedBox(height: 25),
-              _angleCard(qiblah, deviceHeading, qiblaState),
-              const SizedBox(height: 12),
-              _successCard(isAligned: isAligned, isHighlighted: _isHighlighted),
-              const SizedBox(height: 12),
-              _tipCard(),
-              const SizedBox(height: 20),
-            ],
-          ),
+      extendBodyBehindAppBar: true,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _header(qiblaState),
+            const SizedBox(height: 20),
+            CompassView(compassAngle: compassRad, arrowAngle: arrowRad),
+            const SizedBox(height: 25),
+            _angleCard(qiblah, deviceHeading, qiblaState),
+            const SizedBox(height: 12),
+            _successCard(isAligned: isAligned, isHighlighted: _isHighlighted),
+            const SizedBox(height: 12),
+            _tipCard(),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );
@@ -103,35 +102,44 @@ class _QiblaScreenState extends ConsumerState<QiblaScreen> {
           end: Alignment.bottomCenter,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "اتجاه القبلة",
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back, size: 18, color: Colors.white),
                 ),
-              ),
-              SizedBox(width: 6),
-              Icon(Icons.arrow_forward, size: 18, color: Colors.white),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            state.city,
-            style: const TextStyle(
-              fontFamily: 'Cairo',
-              fontSize: 14,
-              color: Colors.white70,
+                SizedBox(width: 8),
+                Text(
+                  "اتجاه القبلة",
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              state.city,
+              style: const TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 14,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

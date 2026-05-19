@@ -136,18 +136,6 @@ class PrayerNotifier extends StateNotifier<PrayerState> {
         return;
       }
     }
-
-    final nextPrayer = prayers.first;
-    final fajrTomorrow = _parsePrayerTime(
-      prayers.first.time,
-    ).add(const Duration(days: 1));
-    final remaining = fajrTomorrow.difference(now);
-
-    state = state.copyWith(
-      nextPrayer: nextPrayer,
-      remaining: remaining,
-      progress: 0.0,
-    );
   }
 
   DateTime _parsePrayerTime(String time) {
@@ -160,12 +148,6 @@ class PrayerNotifier extends StateNotifier<PrayerState> {
       int.parse(parts[0]),
       int.parse(parts[1]),
     );
-  }
-
-  String get remainingText {
-    final hours = state.remaining.inHours;
-    final minutes = state.remaining.inMinutes.remainder(60);
-    return "بعد  $hours ساعة و $minutes دقيقة";
   }
 
   @override
@@ -181,6 +163,9 @@ final prayerProvider = StateNotifierProvider<PrayerNotifier, PrayerState>((
   return PrayerNotifier();
 });
 final remainingTextProvider = Provider<String>((ref) {
-  final notifier = ref.watch(prayerProvider.notifier);
-  return notifier.remainingText;
+  final state = ref.watch(prayerProvider);
+
+  final hours = state.remaining.inHours;
+  final minutes = state.remaining.inMinutes.remainder(60);
+  return "بعد  $hours ساعة و $minutes دقيقة";
 });

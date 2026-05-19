@@ -46,7 +46,7 @@ class _DarkModeTileState extends ConsumerState<DarkModeTile> {
             scale: 43 / 59,
             child: Switch(
               padding: .zero, //todo***********************************
-              value: _darkMode,
+              value: data.mode == AppThemeMode.dark,
               inactiveThumbColor: Colors.white.withValues(alpha: 0.8),
               activeTrackColor: Theme.of(context).colorScheme.inversePrimary,
               trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
