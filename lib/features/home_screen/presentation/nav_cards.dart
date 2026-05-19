@@ -1,6 +1,8 @@
 import 'package:aqem/features/QuranLearning/Quranpage.dart';
 import 'package:aqem/features/azkar_screen/presentation/azkar_screen.dart';
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
+import 'package:aqem/features/home_screen/presentation/view.dart';
+import 'package:aqem/features/masbaha/presentation/masbaha.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
 import 'package:aqem/features/tazkier_screen/presentation/tazkier_screen.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +91,7 @@ class NavCards extends StatelessWidget {
                 onCardTap: () {
                   Navigator.of(
                     context,
-                  ).push(MaterialPageRoute(builder: (context) => Home()));
+                  ).push(MaterialPageRoute(builder: (context) => QuranPage()));
                 },
               ),
             ),
@@ -100,7 +102,11 @@ class NavCards extends StatelessWidget {
           iconData: Icons.circle_outlined,
           title: 'المسبحة',
           subtitle: 'عداد التسبيح',
-          onCardTap: () {},
+          onCardTap: () {
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => TasbihApp()));
+          },
         ),
         SizedBox(height: 12),
         NavCard(
@@ -108,7 +114,11 @@ class NavCards extends StatelessWidget {
           title: 'اتجاه القبلة',
           subtitle: 'تحديد اتجاه القبلة',
           iconBackgroundColor: _secondaryIconColor(context), //onInverseSurface
-          onCardTap: () {},
+          onCardTap: () {
+            //Navigator.of(
+            //context,
+            // ).push(MaterialPageRoute(builder: (context) => ));
+          }, //todo
         ),
       ],
     );

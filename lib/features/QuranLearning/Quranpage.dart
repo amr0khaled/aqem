@@ -3,55 +3,123 @@ import 'package:googleapis/youtube/v3.dart';
 import 'package:aqem/features/QuranLearning/PlaylistScreen.dart';
 import 'package:aqem/features/QuranLearning/data/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Home extends ConsumerStatefulWidget {
-  const Home({super.key});
+import 'domain/playlistCategorizer.dart';
+
+class QuranPage extends ConsumerStatefulWidget {
+  const QuranPage({super.key});
   @override
   // ignore: library_private_types_in_public_api
-  ConsumerState<Home> createState() => HomeScreen();
+  ConsumerState<QuranPage> createState() => QuranPageScreen();
 }
 
-class HomeScreen extends ConsumerState<Home> {
-  List<String> playlistsIds = [
-    "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
-    "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
-    "PLi9e2_6LJN0IWTf56ySmcBsBuX82_dNaR",
-    "PLwNeHLk_z0aSekqYqJdRtuYS74rcGXoWF",
-    "PL7WAHKhMttd7_57UysVeO5RHiedgY_rBh",
-    "PLwNeHLk_z0aQ7rYXtqXCqlSPE_4qxUkF2",
-    "PLn3YCsyQvOYbJGlimLvlTw0uBEx5qtkVM",
-    "PLsabgwJDKALr2-EPjszQZ3eTQQ1yl81ui",
-    "PLJ0WU3XQoz4_vDPS0Xlaf3E2LgUz7pJsp",
-    "PLJ0WU3XQoz48dYxaKhohHdaN-DDlTAIx3",
-    "PLN4Jcpui4Yq23t4Yo3rKRzRt9MmMHa70I",
-    "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
-    "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
-    "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
-  ];
+class QuranPageScreen extends ConsumerState<QuranPage> {
+  AsyncValue<YoutubeResponse<Playlist>> service = const AsyncValue.loading();
+  final Set<String> _expandedLanguages = {};
+  @override
+  void initState() {
+    super.initState();
+    print("=== QuranPage initState START ===");
+    List<String> playlistsIds = [
+      "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
+      "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
+      "PLi9e2_6LJN0IWTf56ySmcBsBuX82_dNaR",
+      "PLwNeHLk_z0aSekqYqJdRtuYS74rcGXoWF",
+      "PL7WAHKhMttd7_57UysVeO5RHiedgY_rBh",
+      "PLwNeHLk_z0aQ7rYXtqXCqlSPE_4qxUkF2",
+      "PLn3YCsyQvOYbJGlimLvlTw0uBEx5qtkVM",
+      "PLsabgwJDKALr2-EPjszQZ3eTQQ1yl81ui",
+      "PLJ0WU3XQoz4_vDPS0Xlaf3E2LgUz7pJsp",
+      "PLJ0WU3XQoz48dYxaKhohHdaN-DDlTAIx3",
+      "PLN4Jcpui4Yq23t4Yo3rKRzRt9MmMHa70I",
+      "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
+      "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
+      "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
+      "PLfUTesWN0JTyQvVOoRQnUguU-v0kxoL-p",
+      "PLNalK17Hk_LLXXtEd7cPt4iQOansx4hrC",
+      "PLr-mGUA8J2jZhxMrL3aIMztK8ahe3j3J5",
+      "PL2DS0i9dIF-fJL1unaXvyyzkryVa2NqtB",
+      "PL01rifg2BPPNhIHrCJLzPqC_QLlSeCy3F",
+      "PLMpZpT9IRpAC3CgmxnJJxXXVXNCPi7htq",
+      "PLbhs-wBfoMATnLCIpm1BS_TNsevpsYhE_",
+      "PLF-AzhmyjY8xEojcjawrgQ8P21MJRuVfM",
+      "PL3Q0fwpkr-mE0z2YIGoAQ2u_e1dC6jyp7",
+      "PLa4GKxenTk5XGzNcexkFzVJfVMjic6izh",
+    ];
+    print("Fetching playlists for IDs: ${playlistsIds.length} items");
+
+    String? token;
+    final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
+    WidgetsBinding.instance.addPostFrameCallback((t) async {
+      print("Post frame callback running...");
+      try {
+        final playlists = await ref.read(playlistProvider(args).future);
+        print("Playlists received: ${playlists.items.length}");
+        if (!mounted) return;
+        setState(() {
+          service = AsyncValue.data(playlists);
+          if (playlists.items.isNotEmpty) {
+            final categorized = PlaylistCategorizer.categorize(playlists.items);
+            if (categorized.isNotEmpty) {
+              _expandedLanguages.add(categorized.keys.first);
+            }
+          }
+        });
+        print("setState completed");
+      } catch (e, stack) {
+        print("ERROR fetching playlists: $e");
+        print("Stack: $stack");
+        if (mounted) {
+          setState(() {
+            service = AsyncValue.error(e, stack);
+          });
+        }
+      }
+    });
+    print("=== QuranPage initState END ===");
+  }
 
   @override
   Widget build(BuildContext context) {
-    String? token;
-    final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
-    final service = ref.read(playlistProvider(args));
+    print(
+      "=== QuranPage BUILD called, service state: ${service.runtimeType} ===",
+    );
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(90),
         child: _buildHeader(),
       ),
-      body: SizedBox(
-        height: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: _buildVideoCardsRow(service),
-        ),
+      body: service.when(
+        data: (data) {
+          print("QuranPage: data branch, items: ${data.items.length}");
+          if (data.items.isEmpty) {
+            return const Center(child: Text('No playlists found'));
+          }
+          final categorized = PlaylistCategorizer.categorize(data.items);
+          return _buildCategorizedView(categorized);
+        },
+        error: (err, stack) {
+          print("QuranPage: error branch: $err");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Error: $err"),
+                duration: const Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          });
+          return Center(child: Text("Error: $err\n\n$stack"));
+        },
+        loading: () {
+          print("QuranPage: loading branch");
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }
 
-  // ===================== HEADER =====================
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
@@ -67,7 +135,7 @@ class HomeScreen extends ConsumerState<Home> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'تقدمي في الدرس',
+            'تقدم في الدرس',
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -86,125 +154,152 @@ class HomeScreen extends ConsumerState<Home> {
     );
   }
 
-  // ===================== SECTION TITLE =====================
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: Color(0xFF333333),
-      ),
-    );
-  }
-
-  Widget _buildVideoCardsRow(AsyncValue<YoutubeResponse<Playlist>> service) {
-    return Container(
-      child: service.when(
-        skipLoadingOnRefresh: false,
-        skipLoadingOnReload: false,
-        data: (data) {
-          return SingleChildScrollView(
-            child: Center(
-              child: Wrap(
-                spacing: 20,
-                runSpacing: 20,
-                children: List.generate(data.items.length, (i) {
-                  final item = data.items[i];
-                  final snippet = item.snippet;
-                  if (snippet == null) {
-                    return _buildVideoCard(
-                      id: null,
-                      num: i,
-                      imageName: "NULL",
-                      duration: 0,
-                      title: "NONE",
-                    );
-                  }
-                  return _buildVideoCard(
-                    id: item.id!,
-                    num: i,
-                    imageName: snippet.title ?? "NULL",
-                    duration: item.contentDetails?.itemCount ?? 1,
-                    title: snippet.title ?? "",
-                    thumbnail: snippet.thumbnails?.medium?.url,
-                  );
-                }),
-              ),
+  Widget _buildCategorizedView(
+    Map<String, Map<PlaylistFunction, List<Playlist>>> categorized,
+  ) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+      child: Column(
+        children: categorized.entries.map((languageEntry) {
+          final language = languageEntry.key;
+          final functions = languageEntry.value;
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-          );
-        },
-        error: (err, stack) {
-          WidgetsBinding.instance.addPostFrameCallback((t) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                elevation: 3,
-                margin: const EdgeInsets.only(bottom: 36, left: 16, right: 16),
-                content: Text(
-                  "Error: $err",
-                  textDirection: TextDirection.ltr,
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                ),
-                duration: const Duration(seconds: 3),
-                behavior: SnackBarBehavior.floating,
-                dismissDirection: DismissDirection.down,
-                backgroundColor: Colors.red.shade900,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+            child: ExpansionTile(
+              initiallyExpanded: _expandedLanguages.contains(language),
+              onExpansionChanged: (expanded) {
+                setState(() {
+                  if (expanded) {
+                    _expandedLanguages.add(language);
+                  } else {
+                    _expandedLanguages.remove(language);
+                  }
+                });
+              },
+              tilePadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 8,
               ),
-            );
-          });
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Error in loading playlists,\nConnect to Internet and try again.",
-                  textDirection: TextDirection.ltr,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 24, color: Colors.red.shade800),
-                ),
-                SizedBox.fromSize(size: Size.fromHeight(20)),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 13, 126, 94),
-                    foregroundColor: Colors.white,
+              title: Row(
+                children: [
+                  Icon(
+                    language == 'العربية' ? Icons.language : Icons.public,
+                    color: const Color(0xFF00897B),
                   ),
-                  onPressed: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text(
-                      "Retry",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
+                  const SizedBox(width: 12),
+                  Text(
+                    language,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF00897B),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    '(${_totalCount(functions)})',
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+              children: functions.entries.map((functionEntry) {
+                final function = functionEntry.key;
+                final playlists = functionEntry.value;
+                final functionName = PlaylistCategorizer.getFunctionName(
+                  function,
+                  language,
+                );
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 16,
+                        bottom: 12,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            _getFunctionIcon(function),
+                            size: 20,
+                            color: Colors.grey.shade700,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            functionName,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade800,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '(${playlists.length})',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Wrap(
+                        spacing: 16,
+                        runSpacing: 16,
+                        children: playlists.map((playlist) {
+                          return _buildVideoCard(playlist);
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    if (function != functions.keys.last)
+                      const Divider(height: 8, indent: 20, endIndent: 20),
+                  ],
+                );
+              }).toList(),
             ),
           );
-        },
-        loading: () => _loading(),
+        }).toList(),
       ),
     );
   }
 
-  Widget _loading() {
-    return Container(child: const Center(child: CircularProgressIndicator()));
+  int _totalCount(Map<PlaylistFunction, List<Playlist>> functions) {
+    return functions.values.fold(0, (sum, list) => sum + list.length);
   }
 
-  Widget _buildVideoCard({
-    required String? id,
-    required int num,
-    required String imageName,
-    required int duration,
-    required String title,
-    String? thumbnail,
-  }) {
+  IconData _getFunctionIcon(PlaylistFunction function) {
+    switch (function) {
+      case PlaylistFunction.tajweed:
+        return Icons.auto_awesome;
+      case PlaylistFunction.recitation:
+        return Icons.mic;
+      case PlaylistFunction.stories:
+        return Icons.menu_book;
+      case PlaylistFunction.ChildrenMemorize:
+        return Icons.child_care;
+      case PlaylistFunction.AdultMemorize:
+        return Icons.person;
+      case PlaylistFunction.other:
+        return Icons.playlist_play;
+    }
+  }
+
+  Widget _buildVideoCard(Playlist playlist) {
+    final snippet = playlist.snippet;
+    final id = playlist.id;
+    final title = snippet?.title ?? 'Untitled';
+    final thumbnail = snippet?.thumbnails?.medium?.url;
+    final itemCount = playlist.contentDetails?.itemCount ?? 0;
     return GestureDetector(
       onTap: () {
         if (id == null) return;
@@ -247,14 +342,23 @@ class HomeScreen extends ConsumerState<Home> {
                         end: Alignment.bottomCenter,
                         colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
                       ),
-                      image: DecorationImage(
-                        image: thumbnail == null
-                            ? AssetImage('images/$imageName.jpg')
-                            : NetworkImage(thumbnail),
-                        fit: BoxFit.cover,
-                        onError: (_, __) {},
-                      ),
+                      image: thumbnail == null
+                          ? null
+                          : DecorationImage(
+                              image: NetworkImage(thumbnail),
+                              fit: BoxFit.cover,
+                              onError: (_, __) {},
+                            ),
                     ),
+                    child: thumbnail == null
+                        ? const Center(
+                            child: Icon(
+                              Icons.playlist_play,
+                              color: Colors.white70,
+                              size: 40,
+                            ),
+                          )
+                        : null,
                   ),
                 ),
                 // Play button overlay
@@ -296,7 +400,7 @@ class HomeScreen extends ConsumerState<Home> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      duration.toString(),
+                      '$itemCount videos',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,

@@ -1,43 +1,49 @@
-import 'dart:async';
-
 import 'package:aqem/core/widgets/special_icon.dart';
-import 'package:aqem/features/home_screen/domain/prayer_time.dart';
 import 'package:aqem/features/home_screen/presentation/next_pray_small_card.dart';
-import 'package:aqem/features/home_screen/domain/prayer_type.dart';
 import 'package:flutter/material.dart';
-
-class NextPray extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/provider.dart';
+class NextPray extends ConsumerWidget {
   const NextPray({super.key});
 
   @override
-  State<NextPray> createState() => _NextPrayState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prayerState = ref.watch(prayerProvider);
+    final remainingText = ref.watch(remainingTextProvider);
 
-class _NextPrayState extends State<NextPray> {
-  double value = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    Timer.periodic(Durations.short1, (t) {
-      if (value > 1.0) {
-        setState(() => value = 0);
-        return;
-      }
-      setState(() => value += 0.01);
-    });
-  }
-
-  List<PrayerTime> prayers = [
-    PrayerTime(type: PrayerType.asr, name: "العصر", time: "3:45"),
-    PrayerTime(type: PrayerType.maghreb, name: "المغرب", time: "6:15"),
-    PrayerTime(type: PrayerType.isha, name: "العشاء", time: "7:45"),
-    PrayerTime(type: PrayerType.fajr, name: "الفجر", time: "5:15"),
-    PrayerTime(type: PrayerType.sunrise, name: "الشروق", time: "6:45"),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
+    if (prayerState.isLoading) {
+      return const Center(child:
+     Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text("جاري تحميل أوقات الصلاة..."),
+        ],
+      ),);
+    }
+    if (prayerState.prayers.isEmpty) {
+      return const Center(child: Text("لا توجد بيانات"));
+    }
+    if (prayerState.error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 16),
+            Text("خطأ: ${prayerState.error}"),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(prayerProvider);
+              },
+              child: const Text("إعادة المحاولة"),
+            ),
+          ],
+        ),
+      );
+    }
     return DefaultTextStyle(
       style: TextStyle(color: Colors.black),
       child: SizedBox.fromSize(
@@ -72,17 +78,18 @@ class _NextPrayState extends State<NextPray> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
                               "الصلاة القادمة",
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 14 ,fontFamily: 'kitab'),
+
                             ),
-                            const Text(
-                              "صلاة الظهر",
-                              style: TextStyle(fontSize: 24),
+                             Text(
+                               prayerState.nextPrayer?.name ?? "",
+                              style: TextStyle(fontSize: 24 ,fontFamily: 'kitab'),
                             ),
                           ],
                         ),
@@ -92,15 +99,15 @@ class _NextPrayState extends State<NextPray> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const Text(
-                        "12:30",
+                      Text(
+                        prayerState.nextPrayer?.time ?? "",
                         style: TextStyle(
                           fontSize: 30,
                           color: Color(0xff0D7E5E),
                         ),
                       ),
-                      const Text(
-                        "بعد ساعة و 15 دقيقة",
+                      Text(
+                        remainingText,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -111,7 +118,7 @@ class _NextPrayState extends State<NextPray> {
               LinearProgressIndicator(
                 backgroundColor: Color(0xffE8E6E1),
                 color: Color(0xff0D7E5E),
-                value: value,
+                value:  prayerState.progress,
                 minHeight: 6,
               ),
 
@@ -123,9 +130,9 @@ class _NextPrayState extends State<NextPray> {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(5, (i) {
-                        return NextPrayerTimeCard(prayer: prayers[i]);
-                      }),
+                      children: prayerState.prayers.map((p) {
+                        return NextPrayerTimeCard(prayer: p);
+                      }).toList(),
                     ),
                   ),
                 ],
