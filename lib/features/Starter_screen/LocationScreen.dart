@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LocationScreen extends StatelessWidget {
+  const LocationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +12,6 @@ class LocationScreen extends StatelessWidget {
             SizedBox(width:20),
             ElevatedButton(
                   onPressed: () {},
-                  child:  Text("التالي"),
                   style: ElevatedButton.styleFrom(
                       elevation: 8,
                       shadowColor: Colors.black,
@@ -19,11 +20,11 @@ class LocationScreen extends StatelessWidget {
                      // minimumSize: Size(382, 56),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24))),
+                  child:  Text("التالي"),
                 ),
             Spacer(),
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text("السابق"),
                   style: ElevatedButton.styleFrom(
                       elevation: 8,
                       shadowColor: Colors.black ,
@@ -32,6 +33,7 @@ class LocationScreen extends StatelessWidget {
                      // minimumSize: Size(382, 56),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24))),
+                  child: Text("السابق"),
                 ),
             SizedBox(width: 20,),
               ],
