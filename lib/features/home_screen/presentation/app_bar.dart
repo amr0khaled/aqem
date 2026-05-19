@@ -1,3 +1,4 @@
+import 'package:aqem/features/settings_screen/presentation/settings_cards.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -41,7 +42,13 @@ class _HomeAppBar extends State<HomeAppBar> {
                     icon: Icon(Icons.mode_night_outlined),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SettingsCards(),
+                        ),
+                      );
+                    },
                     icon: Icon(Icons.settings_outlined),
                   ),
                 ],
