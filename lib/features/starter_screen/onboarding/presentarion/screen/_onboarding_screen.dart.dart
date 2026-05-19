@@ -63,7 +63,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       });
     } else {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isFirstTime', true);
+      await prefs.setBool('isFirstTime', false);
 
       if (!mounted) return;
 
@@ -146,4 +146,3 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 }
-
