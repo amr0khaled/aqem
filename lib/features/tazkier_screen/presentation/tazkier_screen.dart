@@ -1,52 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aqem/core/theme/App_Color.dart';
+import 'package:aqem/features/tazkier_screen/domain/reminder.dart';
 import 'package:aqem/features/tazkier_screen/presentation/add_reminder_dialog.dart';
-// Brand colors — move into core/theme later so the whole app shares them.
+import 'package:aqem/features/tazkier_screen/presentation/providers/reminders_provider.dart';
+import 'package:aqem/features/tazkier_screen/presentation/widgets/reminder_card.dart';
 
-const _brandGreen = AppColors.primary;
-const _bg = AppColors.bg;
-const _tipGold = AppColors.gold;
-
-
-class TazkierScreen extends StatelessWidget {
+class TazkierScreen extends ConsumerWidget {
   const TazkierScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncReminders = ref.watch(remindersProvider);
+
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              _Header(
-                onAdd: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const AddReminderDialog(),
-                  );
-                },
-              ),
+              _Header(onAdd: () => _openAddDialog(context, ref)),
               const SizedBox(height: 16),
               Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    for (int i = 0; i < 4; i++)
-                      const _ReminderCard(title: 'صدقة يومية', time: '12:00 م'),
-                    const SizedBox(height: 4),
-                    _AddNewButton(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => const AddReminderDialog(),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    const _TipCard(),
-                  ],
+                child: asyncReminders.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(child: Text('خطأ: $e')),
+                  data: (reminders) => ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      if (reminders.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 24),
+                          child: Center(
+                            child: Text(
+                              'لا توجد تذكيرات بعد',
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                          ),
+                        )
+                      else
+                        for (final r in reminders)
+                          ReminderCard(
+                            reminder: r,
+                            onTap: () => _openEditDialog(context, ref, r),
+                          ),
+                      const SizedBox(height: 4),
+                      _AddNewButton(onTap: () => _openAddDialog(context, ref)),
+                      const SizedBox(height: 24),
+                      const _TipCard(),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -55,11 +60,40 @@ class TazkierScreen extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> _openAddDialog(BuildContext context, WidgetRef ref) async {
+    final reminder = await showDialog<Reminder>(
+      context: context,
+      builder: (_) => const AddReminderDialog(),
+    );
+    if (!context.mounted) return;
+    if (reminder != null) {
+      await ref.read(remindersProvider.notifier).add(reminder);
+    }
+  }
+
+  Future<void> _openEditDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Reminder existing,
+  ) async {
+    final updated = await showDialog<Reminder>(
+      context: context,
+      builder: (_) => AddReminderDialog(
+        initial: existing,
+        onDelete: () {
+          ref.read(remindersProvider.notifier).remove(existing.id);
+        },
+      ),
+    );
+    if (!context.mounted) return;
+    if (updated != null) {
+      await ref.read(remindersProvider.notifier).edit(updated);
+    }
+  }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Header: green rounded bar with title on the right, "+" on the left
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Header ────────────────────────────────────────────────────────────────
 class _Header extends StatelessWidget {
   final VoidCallback onAdd;
   const _Header({required this.onAdd});
@@ -74,6 +108,13 @@ class _Header extends StatelessWidget {
       ),
       child: Row(
         children: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          ),
+          const SizedBox(width: 8),
           const Text(
             'التذكيرات',
             style: TextStyle(
@@ -82,8 +123,6 @@ class _Header extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(width: 8),
-          const Icon(Icons.arrow_back, color: Colors.white, size: 22),
           const Spacer(),
           Material(
             color: Colors.transparent,
@@ -107,93 +146,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Reminder card: heart on the right, title+time in the middle, switch on the left
-// ─────────────────────────────────────────────────────────────────────────────
-class _ReminderCard extends StatefulWidget {
-  final String title;
-  final String time;
-  const _ReminderCard({required this.title, required this.time});
-
-  @override
-  State<_ReminderCard> createState() => _ReminderCardState();
-}
-
-class _ReminderCardState extends State<_ReminderCard> {
-  // Local state for Phase 1. In Phase 2 this moves into a Riverpod provider.
-  bool _on = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Heart circle — START side (visual right in RTL)
-          Container(
-            width: 44,
-            height: 44,
-            decoration: const BoxDecoration(
-              color: _brandGreen,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.favorite, color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 12),
-          // Title + time
-          Expanded(
-            child: Column(
-              // In RTL, CrossAxisAlignment.start = right-aligned
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      widget.time,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Switch — END side (visual left in RTL)
-          Switch(
-            value: _on,
-            onChanged: (v) => setState(() => _on = v),
-            activeThumbColor: _brandGreen,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// "Add new reminder" placeholder button
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Add-new placeholder button ────────────────────────────────────────────
 class _AddNewButton extends StatelessWidget {
   final VoidCallback onTap;
   const _AddNewButton({required this.onTap});
@@ -229,9 +182,7 @@ class _AddNewButton extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Tip card at the bottom (gold-tinted)
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Tip card ──────────────────────────────────────────────────────────────
 class _TipCard extends StatelessWidget {
   const _TipCard();
 
@@ -240,7 +191,7 @@ class _TipCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color:AppColors.beige,
+        color: AppColors.beige,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
       ),
@@ -269,7 +220,7 @@ class _TipCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: const BoxDecoration(
-              color: _tipGold,
+              color: AppColors.gold,
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.lightbulb, color: Colors.white, size: 20),

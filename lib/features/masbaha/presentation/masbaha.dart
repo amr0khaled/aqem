@@ -339,7 +339,7 @@ class _TasbihScreenState extends State<TasbihScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: greenMain.withOpacity(0.08),
+            color: greenMain.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -397,7 +397,7 @@ class _TasbihScreenState extends State<TasbihScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: greenMain.withOpacity(
+                    color: greenMain.withValues(alpha:
                         (1 - _pulseAnim.value).clamp(0, 1) * 0.4),
                     width: 3,
                   ),
@@ -494,12 +494,12 @@ class _TasbihScreenState extends State<TasbihScreen>
             color: greenMain,
             boxShadow: [
               BoxShadow(
-                color: greenMain.withOpacity(0.35),
+                color: greenMain.withValues(alpha:0.35),
                 blurRadius: 24,
                 offset: const Offset(0, 6),
               ),
               BoxShadow(
-                color: greenMain.withOpacity(0.2),
+                color: greenMain.withValues(alpha:0.2),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -517,7 +517,7 @@ class _TasbihScreenState extends State<TasbihScreen>
                   height: 30,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.18),
+                    color: Colors.white.withValues(alpha:0.18),
                   ),
                 ),
               ),
