@@ -1,4 +1,5 @@
 import 'package:aqem/features/QuranLearning/Quranpage.dart';
+import 'package:aqem/features/azkar_screen/presentation/azkar_screen.dart';
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
 import 'package:aqem/features/tazkier_screen/presentation/tazkier_screen.dart';
@@ -54,7 +55,11 @@ class NavCards extends StatelessWidget {
                   iconData: Icons.front_hand_outlined,
                   title: 'الأدعية والأذكار',
                   subtitle: 'حصن المسلم',
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => AzkarScreen()),
+                    );
+                  },
                 ),
               ),
               Expanded(
@@ -84,9 +89,9 @@ class NavCards extends StatelessWidget {
                   title: 'تعليم القرآن',
                   subtitle: 'دروس وتلاوات',
                   onCardTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Home()),
-                    );
+                    Navigator.of(
+                      context,
+                    ).push(MaterialPageRoute(builder: (context) => Home()));
                   },
                 ),
               ),

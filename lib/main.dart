@@ -1,3 +1,4 @@
+import 'package:aqem/features/azkar_screen/data/dua_data.dart';
 import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:flutter/material.dart';
 import 'package:aqem/core/theme/dynamic_color.dart';
@@ -13,6 +14,7 @@ Future<void> main() async {
   TimeThemeManager.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await NotificationService.init();
+  await initDuaData();
   runApp(
     ProviderScope(
       child: Directionality(textDirection: TextDirection.rtl, child: MyApp()),

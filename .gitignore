@@ -45,9 +45,5 @@ app.*.map.json
 /android/app/release
 
 /linux
-<<<<<<< HEAD
 android/build/
-=======
-
->>>>>>> mazen
 .env*
