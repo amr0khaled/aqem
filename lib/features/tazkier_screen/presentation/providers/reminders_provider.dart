@@ -6,13 +6,9 @@ import 'package:aqem/core/services/notification_service.dart';
 class RemindersNotifier extends AsyncNotifier<List<Reminder>> {
   final _storage = RemindersStorage();
 
-  /// build() is called once when the provider is first watched.
-  /// Whatever it returns becomes the initial state.
   @override
   Future<List<Reminder>> build() async {
     final reminders = await _storage.load();
-    // Re-sync notifications on app launch — in case reboots/updates
-    // wiped scheduled alarms, or someone toggled a reminder before init.
     for (final r in reminders) {
       if (r.isEnabled) {
         await NotificationService.schedule(r);
@@ -21,13 +17,13 @@ class RemindersNotifier extends AsyncNotifier<List<Reminder>> {
     return reminders;
   }
 
-Future<void> add(Reminder reminder) async {
-  final current = state.value ?? [];
-  final updated = [...current, reminder];
-  state = AsyncValue.data(updated);
-  await _storage.save(updated);
-  await NotificationService.schedule(reminder);
-}
+  Future<void> add(Reminder reminder) async {
+    final current = state.value ?? [];
+    final updated = [...current, reminder];
+    state = AsyncValue.data(updated);
+    await _storage.save(updated);
+    await NotificationService.schedule(reminder);
+  }
 
   Future<void> remove(String id) async {
     final current = state.value ?? [];

@@ -108,6 +108,13 @@ class _Header extends StatelessWidget {
       ),
       child: Row(
         children: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          ),
+          const SizedBox(width: 8),
           const Text(
             'التذكيرات',
             style: TextStyle(
@@ -116,8 +123,6 @@ class _Header extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(width: 8),
-          const Icon(Icons.arrow_back, color: Colors.white, size: 22),
           const Spacer(),
           Material(
             color: Colors.transparent,
@@ -128,7 +133,7 @@ class _Header extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha:0.18),
+                  color: Colors.white.withValues(alpha: 0.18),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.add, color: Colors.white, size: 24),
@@ -188,7 +193,7 @@ class _TipCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.beige,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.gold.withValues(alpha:0.4)),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
