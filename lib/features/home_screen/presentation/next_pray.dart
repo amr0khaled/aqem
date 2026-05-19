@@ -3,6 +3,7 @@ import 'package:aqem/features/home_screen/presentation/next_pray_small_card.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/provider.dart';
+
 class NextPray extends ConsumerWidget {
   const NextPray({super.key});
 
@@ -12,18 +13,27 @@ class NextPray extends ConsumerWidget {
     final remainingText = ref.watch(remainingTextProvider);
 
     if (prayerState.isLoading) {
-      return const Center(child:
-     Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text("جاري تحميل أوقات الصلاة..."),
-        ],
-      ),);
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text(
+              "جاري تحميل أوقات الصلاة...",
+              style: TextStyle(color: Colors.white70, fontSize: 16),
+            ),
+          ],
+        ),
+      );
     }
     if (prayerState.prayers.isEmpty) {
-      return const Center(child: Text("لا توجد بيانات"));
+      return const Center(
+        child: Text(
+          "لا توجد بيانات",
+          style: TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+      );
     }
     if (prayerState.error != null) {
       return Center(
@@ -84,12 +94,17 @@ class NextPray extends ConsumerWidget {
                           children: [
                             const Text(
                               "الصلاة القادمة",
-                              style: TextStyle(fontSize: 14 ,fontFamily: 'kitab'),
-
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'kitab',
+                              ),
                             ),
-                             Text(
-                               prayerState.nextPrayer?.name ?? "",
-                              style: TextStyle(fontSize: 24 ,fontFamily: 'kitab'),
+                            Text(
+                              prayerState.nextPrayer?.name ?? "",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontFamily: 'kitab',
+                              ),
                             ),
                           ],
                         ),
@@ -106,10 +121,7 @@ class NextPray extends ConsumerWidget {
                           color: Color(0xff0D7E5E),
                         ),
                       ),
-                      Text(
-                        remainingText,
-                        style: TextStyle(fontSize: 12),
-                      ),
+                      Text(remainingText, style: TextStyle(fontSize: 12)),
                     ],
                   ),
                 ],
@@ -118,7 +130,7 @@ class NextPray extends ConsumerWidget {
               LinearProgressIndicator(
                 backgroundColor: Color(0xffE8E6E1),
                 color: Color(0xff0D7E5E),
-                value:  prayerState.progress,
+                value: prayerState.progress,
                 minHeight: 6,
               ),
 
