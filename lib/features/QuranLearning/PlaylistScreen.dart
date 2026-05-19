@@ -55,7 +55,9 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
               bottomRight: Radius.circular(24),
             ),
           ),
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(
+            top: 20,
+          ).add(EdgeInsets.symmetric(horizontal: 16)),
           child: SafeArea(
             child: Text(
               widget.name,
@@ -187,14 +189,13 @@ class _PlaylistScreen extends ConsumerState<PlaylistScreen> {
       ),
     );
   }
+
   Widget _loading() {
-return const Center(child: CircularProgressIndicator(color: Color.fromARGB(
-                                  255,
-                                  13,
-                                  126,
-                                  94,
-                                ),));
+    return const Center(
+      child: CircularProgressIndicator(color: Color.fromARGB(255, 13, 126, 94)),
+    );
   }
+
   Widget _playlistItems() {
     return Container(
       child: service?.when(
