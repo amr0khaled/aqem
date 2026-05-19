@@ -53,12 +53,10 @@ dependencies:
   flutter_dotenv: ^6.0.1
   googleapis: ^16.0.0
   googleapis_auth: ^2.3.1
-  shared_preferences: ^2.3.0
   flutter_local_notifications: ^19.0.0
   timezone: ^0.10.1
   flutter_timezone: ^3.0.1
   path_provider: ^2.1.5
-  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
