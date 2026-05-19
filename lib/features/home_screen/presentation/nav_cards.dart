@@ -93,18 +93,6 @@ class NavCards extends StatelessWidget {
                 },
               ),
             ),
-
-            Expanded(
-              child: NavCard(
-                iconData: Icons.location_on_outlined,
-                title: 'المساجد',
-                subtitle: 'أقرب المساجد',
-                iconBackgroundColor: _secondaryIconColor(
-                  context,
-                ), //onInverseSurface
-                onCardTap: () {},
-              ),
-            ),
           ],
         ),
         SizedBox(height: 12),

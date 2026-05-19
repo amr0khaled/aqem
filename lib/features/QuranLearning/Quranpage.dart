@@ -14,42 +14,28 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class HomeScreen extends ConsumerState<Home> {
-  AsyncValue<YoutubeResponse<Playlist>>? service;
-  @override
-  void initState() {
-    super.initState();
-    List<String> playlistsIds = [
-      "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
-      "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
-      "PLi9e2_6LJN0IWTf56ySmcBsBuX82_dNaR",
-      "PLwNeHLk_z0aSekqYqJdRtuYS74rcGXoWF",
-      "PL7WAHKhMttd7_57UysVeO5RHiedgY_rBh",
-      "PLwNeHLk_z0aQ7rYXtqXCqlSPE_4qxUkF2",
-      "PLn3YCsyQvOYbJGlimLvlTw0uBEx5qtkVM",
-      "PLsabgwJDKALr2-EPjszQZ3eTQQ1yl81ui",
-      "PLJ0WU3XQoz4_vDPS0Xlaf3E2LgUz7pJsp",
-      "PLJ0WU3XQoz48dYxaKhohHdaN-DDlTAIx3",
-      "PLN4Jcpui4Yq23t4Yo3rKRzRt9MmMHa70I",
-      "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
-      "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
-      "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
-    ];
-    String? token;
-    final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
-    WidgetsBinding.instance.addPostFrameCallback((t) async {
-      final playlists = await ref.read(playlistProvider(args).future);
-      setState(() {
-        service =
-            AsyncValue
-            // .loading();
-            // .data(playlists);
-            .error(Error(), StackTrace.fromString("Stack"));
-      });
-    });
-  }
+  List<String> playlistsIds = [
+    "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
+    "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
+    "PLi9e2_6LJN0IWTf56ySmcBsBuX82_dNaR",
+    "PLwNeHLk_z0aSekqYqJdRtuYS74rcGXoWF",
+    "PL7WAHKhMttd7_57UysVeO5RHiedgY_rBh",
+    "PLwNeHLk_z0aQ7rYXtqXCqlSPE_4qxUkF2",
+    "PLn3YCsyQvOYbJGlimLvlTw0uBEx5qtkVM",
+    "PLsabgwJDKALr2-EPjszQZ3eTQQ1yl81ui",
+    "PLJ0WU3XQoz4_vDPS0Xlaf3E2LgUz7pJsp",
+    "PLJ0WU3XQoz48dYxaKhohHdaN-DDlTAIx3",
+    "PLN4Jcpui4Yq23t4Yo3rKRzRt9MmMHa70I",
+    "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
+    "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
+    "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
+  ];
 
   @override
   Widget build(BuildContext context) {
+    String? token;
+    final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
+    final service = ref.read(playlistProvider(args));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(90),
@@ -59,7 +45,7 @@ class HomeScreen extends ConsumerState<Home> {
         height: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: _buildVideoCardsRow(),
+          child: _buildVideoCardsRow(service),
         ),
       ),
     );
@@ -112,9 +98,9 @@ class HomeScreen extends ConsumerState<Home> {
     );
   }
 
-  Widget _buildVideoCardsRow() {
+  Widget _buildVideoCardsRow(AsyncValue<YoutubeResponse<Playlist>> service) {
     return Container(
-      child: service?.when(
+      child: service.when(
         skipLoadingOnRefresh: false,
         skipLoadingOnReload: false,
         data: (data) {
