@@ -76,8 +76,14 @@ class _AzkarScreenState extends State<AzkarScreen> {
         appBar: AppBar(
           leading: BackButton(
             color: Colors.white,
-            onPressed: () {
-              Navigator.pop(context);
+            onPressed: (){
+              if(viewIndex==1){
+                setState(() {
+                  viewIndex=0;
+                });
+              }else{
+                Navigator.pop(context);
+              }
             },
             style: ButtonStyle(iconSize: WidgetStatePropertyAll(18)),
           ),
