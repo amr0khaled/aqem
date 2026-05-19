@@ -11,11 +11,8 @@ import '../../data/datasources/qibla_remote_datasource.dart';
 import '../../data/repositories/qibla_repository_impl.dart';
 import '../../domain/usecases/get_qibla_direction.dart';
 
-final qiblaProvider =
-    StateNotifierProvider<QiblaNotifier, QiblaState>((ref) {
-  final repo = QiblaRepositoryImpl(
-    QiblaRemoteDataSource(http.Client()),
-  );
+final qiblaProvider = StateNotifierProvider<QiblaNotifier, QiblaState>((ref) {
+  final repo = QiblaRepositoryImpl(QiblaRemoteDataSource(http.Client()));
 
   final useCase = GetQiblaDirection(repo);
 
@@ -80,8 +77,7 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
   final GetQiblaDirection getQiblaDirection;
   StreamSubscription? _compassSub;
 
-  QiblaNotifier(this.getQiblaDirection)
-      : super(const QiblaState()) {
+  QiblaNotifier(this.getQiblaDirection) : super(const QiblaState()) {
     _init();
   }
 
@@ -128,8 +124,10 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
         longitude: pos.longitude,
       );
 
-      final placemarks =
-          await placemarkFromCoordinates(pos.latitude, pos.longitude);
+      final placemarks = await placemarkFromCoordinates(
+        pos.latitude,
+        pos.longitude,
+      );
 
       final place = placemarks.first;
 
@@ -139,7 +137,8 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
           place.administrativeArea ??
           'Unknown';
 
-      final distance = Geolocator.distanceBetween(
+      final distance =
+          Geolocator.distanceBetween(
             pos.latitude,
             pos.longitude,
             21.4225,
@@ -158,8 +157,7 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
         _recalculate(event.heading ?? 0);
       });
     } catch (_) {
-      state =
-          state.copyWith(isLoading: false, error: 'Failed to load Qibla');
+      state = state.copyWith(isLoading: false, error: 'Failed to load Qibla');
     }
   }
 
@@ -169,3 +167,4 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
     super.dispose();
   }
 }
+

@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aqem/features/prayer_times_screen/domain/prayer.dart';
 import 'package:aqem/features/prayer_times_screen/domain/prayer_times_data.dart';
 import 'package:aqem/features/prayer_times_screen/presentation/providers/prayer_times_provider.dart';
-enum _Status { passed, active, upcoming }
 
+enum _Status { passed, active, upcoming }
 
 // ─── Screen ────────────────────────────────────────────────────────────
 class PrayerTimesScreen extends ConsumerWidget {
@@ -44,8 +44,7 @@ class PrayerTimesScreen extends ConsumerWidget {
             ),
           ),
           data: (data) => RefreshIndicator(
-            onRefresh: () =>
-                ref.read(prayerTimesProvider.notifier).reload(),
+            onRefresh: () => ref.read(prayerTimesProvider.notifier).reload(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(16),
@@ -53,7 +52,10 @@ class PrayerTimesScreen extends ConsumerWidget {
                 children: [
                   _Header(data: data),
                   const SizedBox(height: 16),
-                  for (final d in _computeDisplays(data.prayers, DateTime.now()))
+                  for (final d in _computeDisplays(
+                    data.prayers,
+                    DateTime.now(),
+                  ))
                     _PrayerCard(display: d),
                 ],
               ),
@@ -117,12 +119,23 @@ class _Header extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Row(
                     children: [
-                      Text(
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      const SizedBox(width: 6),
+                      const Text(
                         'مواقيت الصلاة',
                         style: TextStyle(
                           color: Colors.white,
@@ -130,8 +143,6 @@ class _Header extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(width: 6),
-                      Icon(Icons.arrow_back, color: Colors.white, size: 20),
                     ],
                   ),
                   SizedBox(height: 2),
@@ -141,16 +152,16 @@ class _Header extends StatelessWidget {
                   ),
                 ],
               ),
-              const Spacer(),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.18),
-                  shape: BoxShape.circle,
-                ),
-                // child: const Icon(Icons.settings, color: Colors.white, size: 18),
-              ),
+              // const Spacer(),
+              // Container(
+              //   width: 36,
+              //   height: 36,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white.withOpacity(0.18),
+              //     shape: BoxShape.circle,
+              //   ),
+              //   // child: const Icon(Icons.settings, color: Colors.white, size: 18),
+              // ),
             ],
           ),
           const SizedBox(height: 14),
@@ -168,8 +179,11 @@ class _Header extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 13),
                 ),
                 const SizedBox(width: 6),
-                Icon(Icons.location_on,
-                    color: Colors.white.withOpacity(0.9), size: 16),
+                Icon(
+                  Icons.location_on,
+                  color: Colors.white.withOpacity(0.9),
+                  size: 16,
+                ),
               ],
             ),
           ),
@@ -233,9 +247,7 @@ class _PrayerCardState extends State<_PrayerCard> {
       decoration: BoxDecoration(
         color: isActive ? AppColors.primary : Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: isActive
-            ? Border.all(color: AppColors.gold, width: 1.5)
-            : null,
+        border: isActive ? Border.all(color: AppColors.gold, width: 1.5) : null,
         boxShadow: isActive
             ? null
             : [
@@ -399,3 +411,4 @@ class _PrayerCardState extends State<_PrayerCard> {
     );
   }
 }
+

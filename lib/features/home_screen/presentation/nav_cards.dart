@@ -3,6 +3,7 @@ import 'package:aqem/features/azkar_screen/presentation/azkar_screen.dart';
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
 import 'package:aqem/features/home_screen/presentation/view.dart';
 import 'package:aqem/features/masbaha/presentation/masbaha.dart';
+import 'package:aqem/features/qibla/presentation/screens/qibla_screen.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
 import 'package:aqem/features/tazkier_screen/presentation/tazkier_screen.dart';
 import 'package:flutter/material.dart';
@@ -122,9 +123,9 @@ class NavCards extends StatelessWidget {
           subtitle: 'تحديد اتجاه القبلة',
           iconBackgroundColor: _secondaryIconColor(context), //onInverseSurface
           onCardTap: () {
-            //Navigator.of(
-            //context,
-            // ).push(MaterialPageRoute(builder: (context) => ));
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => QiblaScreen()));
           }, //todo
         ),
       ],

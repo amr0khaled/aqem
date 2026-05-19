@@ -16,7 +16,6 @@ class QiblaRemoteDataSource {
     );
 
     final response = await client.get(uri);
-
     if (response.statusCode != 200) {
       throw Exception('Failed to fetch Qibla');
     }
@@ -26,3 +25,4 @@ class QiblaRemoteDataSource {
     return QiblaResponseModel.fromJson(jsonMap).direction;
   }
 }
+
