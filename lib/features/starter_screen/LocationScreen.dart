@@ -7,14 +7,14 @@ class LocationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 248, 247, 244),
-      appBar: AppBar( backgroundColor: Color.fromARGB(255, 248, 247, 244),),
+      appBar: AppBar(backgroundColor: Color.fromARGB(255, 248, 247, 244)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            lang.buildIconContainer(icon: Icons.location_on_outlined),
+              lang.buildIconContainer(icon: Icons.location_on_outlined),
               SizedBox(height: 10),
               Center(
                 child: const Text(
@@ -33,62 +33,65 @@ class LocationScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-               lang.buildLanguageOption(
+              lang.buildLanguageOption(
                 icon: Icon(Icons.location_on_outlined),
                 language: 'اوقات الصلاة الدقيقة',
                 subLanguage: 'حساب دقيق بناء على موقعك',
-                isSelected :false,
-                selectable:false,
-              ),SizedBox(height: 5,), lang.buildLanguageOption(
+                isSelected: false,
+                selectable: false,
+              ),
+              SizedBox(height: 5),
+              lang.buildLanguageOption(
                 icon: Icon(Icons.near_me_outlined),
                 language: 'المساجد القريبة',
                 subLanguage: 'اكتشف المساجد من حولك',
-                isSelected :false,
-                selectable:false,
-              ),SizedBox(height: 5,), lang.buildLanguageOption(
+                isSelected: false,
+                selectable: false,
+              ),
+              SizedBox(height: 5),
+              lang.buildLanguageOption(
                 icon: Icon(Icons.shield_outlined),
                 language: 'خصوصيه محميه',
                 subLanguage: 'بياناتك امنه ومحمية',
-                isSelected :false,
-                selectable:false,
-              ),SizedBox(height: 60,),
+                isSelected: false,
+                selectable: false,
+              ),
+              SizedBox(height: 60),
               Row(
                 children: [
                   SizedBox(width: 5),
                   ElevatedButton(
                     onPressed: () {},
-                    child: Text("التالي"),
                     style: ElevatedButton.styleFrom(
                       elevation: 8,
                       shadowColor: Colors.black,
                       backgroundColor: Color.fromARGB(255, 13, 126, 94),
                       foregroundColor: Colors.white,
-                       minimumSize: Size(110, 40),
+                      minimumSize: Size(110, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
                     ),
+                    child: Text("التالي"),
                   ),
                   Spacer(),
                   ElevatedButton(
                     onPressed: () {},
-                    child: Text("السابق"),
                     style: ElevatedButton.styleFrom(
                       elevation: 8,
                       shadowColor: Colors.black,
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
-                       minimumSize: Size(110, 40),
+                      minimumSize: Size(110, 40),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
                     ),
+                    child: Text("السابق"),
                   ),
-                  SizedBox(width: 5),
+                  SizedBox(width: 20),
                 ],
               ),
-
-
             ],
           ),
         ),

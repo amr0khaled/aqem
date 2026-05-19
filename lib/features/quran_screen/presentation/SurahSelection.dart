@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SurahSelection extends ConsumerStatefulWidget {
   int selectedButton = 1;
+
+  SurahSelection({super.key});
   @override
   _SurahSelectionScreen createState() => _SurahSelectionScreen();
 }
@@ -299,7 +301,7 @@ class _SurahSelectionScreen extends ConsumerState<SurahSelection> {
           trailing: Stack(
             alignment: Alignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 40,
                 height: 40,
                 child: Icon(

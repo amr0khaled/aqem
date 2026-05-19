@@ -69,142 +69,130 @@ class _AzkarScreenState extends State<AzkarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: .rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
-        appBar: AppBar(
-          leading: BackButton(
-            color: Colors.white,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: ButtonStyle(iconSize: WidgetStatePropertyAll(18)),
-          ),
-          title: Column(
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                "الأدعية والأذكار",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  height: 1.3,
-                ),
-              ),
-              Text(
-                "حصن المسلم اليومي",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: .w400,
-                  fontSize: 14,
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            SpecialIcon(
-              content: Text('🤲'),
-              color: Colors.white.withValues(alpha: 0.2),
-              shadowFlag: false,
-              gradientFlag: false,
-            ),
-          ],
-          actionsPadding: .symmetric(horizontal: 18),
-          backgroundColor: Color(0xFF0D7E5E),
-          toolbarHeight: 80,
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        leading: BackButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: ButtonStyle(iconSize: WidgetStatePropertyAll(18)),
         ),
-        body: Stack(
+        title: Column(
+          crossAxisAlignment: .start,
           children: [
-            AzkarCountStage(
-              firstWidgetTitle: (viewIndex == 0) ? 'الفئات' : 'ذكر',
-              firstWidgetNumber: viewIndex == 0
-                  ? categories.length
-                  : (viewIndex == 1
-                        ? (category == DuaCategory.sabah
-                              ? duaData
-                                    .where(
-                                      (duaRecord) =>
-                                          duaRecord.category ==
-                                          DuaCategory.sabah,
-                                    )
-                                    .length
-                              : (category == DuaCategory.masaa
-                                    ? duaData
-                                          .where(
-                                            (duaRecord) =>
-                                                duaRecord.category ==
-                                                DuaCategory.masaa,
-                                          )
-                                          .length
-                                    : ((category == DuaCategory.hefz
-                                          ? duaData
-                                                .where(
-                                                  (duaRecord) =>
-                                                      duaRecord.category ==
-                                                      DuaCategory.hefz,
-                                                )
-                                                .length
-                                          : (category == DuaCategory.nawm
-                                                ? duaData
-                                                      .where(
-                                                        (duaRecord) =>
-                                                            duaRecord
-                                                                .category ==
-                                                            DuaCategory.nawm,
-                                                      )
-                                                      .length
-                                                : (category == DuaCategory.daily
-                                                      ? duaData
-                                                            .where(
-                                                              (duaRecord) =>
-                                                                  duaRecord
-                                                                      .category ==
-                                                                  DuaCategory
-                                                                      .daily,
-                                                            )
-                                                            .length
-                                                      : (category ==
-                                                                DuaCategory
-                                                                    .salah
-                                                            ? duaData
-                                                                  .where(
-                                                                    (
-                                                                      duaRecord,
-                                                                    ) =>
-                                                                        duaRecord
-                                                                            .category ==
-                                                                        DuaCategory
-                                                                            .salah,
-                                                                  )
-                                                                  .length
-                                                            : 0)))))))
-                        : 0),
-              completedNumber: duaData
-                  .where((duaRecord) => duaRecord.isComplete)
-                  .length,
-              favouriteNumber: duaData
-                  .where((duaRecord) => duaRecord.isFavourite)
-                  .length,
+            Text(
+              "الأدعية والأذكار",
+              style: TextStyle(color: Colors.white, fontSize: 24, height: 1.3),
             ),
-            viewIndex == 0
-                ? _buildGrid()
-                : AzkarInsideScreen(
-                    category: category,
-                    onUpdate: () {
-                      setState(() {});
-                    },
-                    onBackPressed: () {
-                      if (viewIndex == 1) {
-                        setState(() {
-                          viewIndex = 0;
-                        });
-                      }
-                    },
-                  ),
+            Text(
+              "حصن المسلم اليومي",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: .w400,
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
           ],
         ),
+        actions: [
+          SpecialIcon(
+            content: Text('🤲'),
+            color: Colors.white.withValues(alpha: 0.2),
+            shadowFlag: false,
+            gradientFlag: false,
+          ),
+        ],
+        actionsPadding: .symmetric(horizontal: 18),
+        backgroundColor: Color(0xFF0D7E5E),
+        toolbarHeight: 80,
+      ),
+      body: Stack(
+        children: [
+          AzkarCountStage(
+            firstWidgetTitle: (viewIndex == 0) ? 'الفئات' : 'ذكر',
+            firstWidgetNumber: viewIndex == 0
+                ? categories.length
+                : (viewIndex == 1
+                      ? (category == DuaCategory.sabah
+                            ? duaData
+                                  .where(
+                                    (duaRecord) =>
+                                        duaRecord.category == DuaCategory.sabah,
+                                  )
+                                  .length
+                            : (category == DuaCategory.masaa
+                                  ? duaData
+                                        .where(
+                                          (duaRecord) =>
+                                              duaRecord.category ==
+                                              DuaCategory.masaa,
+                                        )
+                                        .length
+                                  : ((category == DuaCategory.hefz
+                                        ? duaData
+                                              .where(
+                                                (duaRecord) =>
+                                                    duaRecord.category ==
+                                                    DuaCategory.hefz,
+                                              )
+                                              .length
+                                        : (category == DuaCategory.nawm
+                                              ? duaData
+                                                    .where(
+                                                      (duaRecord) =>
+                                                          duaRecord.category ==
+                                                          DuaCategory.nawm,
+                                                    )
+                                                    .length
+                                              : (category == DuaCategory.daily
+                                                    ? duaData
+                                                          .where(
+                                                            (duaRecord) =>
+                                                                duaRecord
+                                                                    .category ==
+                                                                DuaCategory
+                                                                    .daily,
+                                                          )
+                                                          .length
+                                                    : (category ==
+                                                              DuaCategory.salah
+                                                          ? duaData
+                                                                .where(
+                                                                  (duaRecord) =>
+                                                                      duaRecord
+                                                                          .category ==
+                                                                      DuaCategory
+                                                                          .salah,
+                                                                )
+                                                                .length
+                                                          : 0)))))))
+                      : 0),
+            completedNumber: duaData
+                .where((duaRecord) => duaRecord.isComplete)
+                .length,
+            favouriteNumber: duaData
+                .where((duaRecord) => duaRecord.isFavourite)
+                .length,
+          ),
+          viewIndex == 0
+              ? _buildGrid()
+              : AzkarInsideScreen(
+                  category: category,
+                  onUpdate: () {
+                    setState(() {});
+                  },
+                  onBackPressed: () {
+                    if (viewIndex == 1) {
+                      setState(() {
+                        viewIndex = 0;
+                      });
+                    }
+                  },
+                ),
+        ],
       ),
     );
   }

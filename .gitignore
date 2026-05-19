@@ -45,5 +45,11 @@ app.*.map.json
 /android/app/release
 
 /linux
+<<<<<<< HEAD
 android/build/
 .env*
+=======
+
+.env*
+android/build/
+>>>>>>> feature/settings
