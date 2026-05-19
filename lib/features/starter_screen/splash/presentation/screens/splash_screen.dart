@@ -45,8 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs =
         await SharedPreferences.getInstance(); // Get saved local preferences
 
-    final isFirstTime = true;
-    prefs.getBool('isFirstTime') ?? true; // Get saved local preferences
+    final isFirstTime =
+        prefs.getBool('isFirstTime') ?? true; // Get saved local preferences
 
     if (!mounted) return; // Prevent navigation if widget removed from tree
 

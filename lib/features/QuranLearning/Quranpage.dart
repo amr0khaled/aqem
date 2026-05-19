@@ -38,75 +38,72 @@ class QuranLearningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // === Header ===
-              _buildHeader(),
-              const SizedBox(height: 20),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // === Header ===
+            _buildHeader(),
+            const SizedBox(height: 20),
 
-              // === Progress Card ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildProgressCard(),
-              ),
-              const SizedBox(height: 28),
+            // === Progress Card ===
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildProgressCard(),
+            ),
+            const SizedBox(height: 28),
 
-              // === Use Lessons Section ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSectionTitle('استخدمي الدروس'),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(height: 195, child: _buildVideoCardsRow()),
-              const SizedBox(height: 28),
+            // === Use Lessons Section ===
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildSectionTitle('استخدمي الدروس'),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(height: 195, child: _buildVideoCardsRow()),
+            const SizedBox(height: 28),
 
-              // === My Favorite Courses Section ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSectionTitle('دوراتي المفضلة'),
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'أهمية القراءة السريعة',
-                subtitle: '45 دقيقة  |  12 درس',
-                progressText: '8 من 12 درس',
-                progressPercent: 0.67,
-                percentText: '67%',
-                isLocked: false,
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'كيف تقرأ',
-                subtitle: '60 دقيقة  |  37 درس',
-                progressText: '15 من 37 درس',
-                progressPercent: 0.41,
-                percentText: '41%',
-                isLocked: false,
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'القراءة السريعة المتقدمة',
-                subtitle: '90 دقيقة  |  30 درس',
-                progressText: '',
-                progressPercent: 0.0,
-                percentText: '',
-                isLocked: true,
-              ),
-              const SizedBox(height: 28),
+            // === My Favorite Courses Section ===
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildSectionTitle('دوراتي المفضلة'),
+            ),
+            const SizedBox(height: 12),
+            _buildCourseCard(
+              title: 'أهمية القراءة السريعة',
+              subtitle: '45 دقيقة  |  12 درس',
+              progressText: '8 من 12 درس',
+              progressPercent: 0.67,
+              percentText: '67%',
+              isLocked: false,
+            ),
+            const SizedBox(height: 12),
+            _buildCourseCard(
+              title: 'كيف تقرأ',
+              subtitle: '60 دقيقة  |  37 درس',
+              progressText: '15 من 37 درس',
+              progressPercent: 0.41,
+              percentText: '41%',
+              isLocked: false,
+            ),
+            const SizedBox(height: 12),
+            _buildCourseCard(
+              title: 'القراءة السريعة المتقدمة',
+              subtitle: '90 دقيقة  |  30 درس',
+              progressText: '',
+              progressPercent: 0.0,
+              percentText: '',
+              isLocked: true,
+            ),
+            const SizedBox(height: 28),
 
-              // === Promotional Card ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildPromoCard(),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+            // === Promotional Card ===
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildPromoCard(),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );

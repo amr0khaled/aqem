@@ -19,48 +19,45 @@ class _AyahListTileState extends State<AyahListTile> {
       color: isDark ? Colors.grey.shade900 : Colors.white,
       child: Material(
         color: Colors.transparent,
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: ListTile(
-            title: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                widget.ayahText,
-                style: TextStyle(
-                  fontFamily: "Kitab",
-                  letterSpacing: 1.8,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.clip,
+        child: ListTile(
+          title: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Text(
+              widget.ayahText,
+              style: TextStyle(
+                fontFamily: "Kitab",
+                letterSpacing: 1.8,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
               ),
+              overflow: TextOverflow.clip,
             ),
-            trailing: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: isDark ? Colors.black87 : Colors.white38,
-                    offset: Offset(0, 2),
-                    blurRadius: 2,
-                  ),
-                ],
-                gradient: LinearGradient(
-                  colors: [Color(0xff0c7c5c), Color(0xff096248)],
-                  begin: AlignmentDirectional.topCenter,
-                  end: AlignmentDirectional.bottomCenter,
+          ),
+          trailing: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: isDark ? Colors.black87 : Colors.white38,
+                  offset: Offset(0, 2),
+                  blurRadius: 2,
                 ),
-                shape: BoxShape.circle,
+              ],
+              gradient: LinearGradient(
+                colors: [Color(0xff0c7c5c), Color(0xff096248)],
+                begin: AlignmentDirectional.topCenter,
+                end: AlignmentDirectional.bottomCenter,
               ),
-              child: Center(
-                child: Text(
-                  widget.number.toString(),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                widget.number.toString(),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),

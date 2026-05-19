@@ -49,6 +49,7 @@ dependencies:
   flutter_compass: ^0.8.1
   http: ^1.6.0
   path_provider: ^2.1.5
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:
@@ -105,6 +106,7 @@ flutter:
     - assets/icons/heart.png
     - assets/icons/Qibla.svg
     - assets/dua_data.json
+    - .env
 
   fonts:
     - family: Kitab
