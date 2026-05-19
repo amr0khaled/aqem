@@ -67,69 +67,66 @@ class AyahCard extends StatelessWidget {
               Positioned(top: 0, right: 0, child: _hollowCircle(100)),
               Positioned(bottom: 0, left: 0, child: _hollowCircle(80)),
 
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 28,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          color: starGold,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.star_rounded,
-                          color: Colors.white,
-                          size: 28,
-                        ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 28,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: starGold,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 10),
+                      child: const Icon(
+                        Icons.star_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
 
-                      const Text(
-                        'آية اليوم',
-                        style: TextStyle(
-                          color: refColor,
-                          fontSize: 14,
-                          fontFamily: 'Cairo',
-                        ),
+                    const Text(
+                      'آية اليوم',
+                      style: TextStyle(
+                        color: refColor,
+                        fontSize: 14,
+                        fontFamily: 'Cairo',
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                    const SizedBox(height: 20),
 
-                      Container(height: 1, width: 80, color: dividerGold),
-                      const SizedBox(height: 13),
+                    Container(height: 1, width: 80, color: dividerGold),
+                    const SizedBox(height: 13),
 
-                      Text(
-                        '﴿ ${verse['text']} ﴾',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          height: 1.9,
-                          color: verseColor,
-                fontFamily: "Kitab",
-                        ),
+                    Text(
+                      '﴿ ${verse['text']} ﴾',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        height: 1.9,
+                        color: verseColor,
+                        fontFamily: "Kitab",
                       ),
-                      const SizedBox(height: 10),
-                      Container(height: 1, width: 80, color: dividerGold),
-                      const SizedBox(height: 10),
-                      Text(
-                        '${verse['surah']} - آية ${verse['ayah']}',
-                        style: const TextStyle(
-                          color: refColor,
-                          fontSize: 13,
-                          fontFamily: 'Cairo',
-                          fontWeight: FontWeight.w300,
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(height: 1, width: 80, color: dividerGold),
+                    const SizedBox(height: 10),
+                    Text(
+                      '${verse['surah']} - آية ${verse['ayah']}',
+                      style: const TextStyle(
+                        color: refColor,
+                        fontSize: 13,
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.w300,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

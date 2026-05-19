@@ -1,112 +1,65 @@
+import 'package:aqem/core/utils/models/response.dart';
+import 'package:googleapis/youtube/v3.dart';
+import 'package:aqem/features/QuranLearning/PlaylistScreen.dart';
+import 'package:aqem/features/QuranLearning/data/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    ),
-  );
-  runApp(const QuranLearningApp());
+class Home extends ConsumerStatefulWidget {
+  const Home({super.key});
+  @override
+  // ignore: library_private_types_in_public_api
+  ConsumerState<Home> createState() => HomeScreen();
 }
 
-class QuranLearningApp extends StatelessWidget {
-  const QuranLearningApp({super.key});
-
+class HomeScreen extends ConsumerState<Home> {
+  AsyncValue<YoutubeResponse<Playlist>>? service;
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'تعلم القرآن',
-      theme: ThemeData(
-        fontFamily: 'Cairo',
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00897B),
-          primary: const Color(0xFF00897B),
-        ),
-      ),
-      home: const HomeScreen(),
-    );
+  void initState() {
+    super.initState();
+    List<String> playlistsIds = [
+      "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
+      "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
+      "PLi9e2_6LJN0IWTf56ySmcBsBuX82_dNaR",
+      "PLwNeHLk_z0aSekqYqJdRtuYS74rcGXoWF",
+      "PL7WAHKhMttd7_57UysVeO5RHiedgY_rBh",
+      "PLwNeHLk_z0aQ7rYXtqXCqlSPE_4qxUkF2",
+      "PLn3YCsyQvOYbJGlimLvlTw0uBEx5qtkVM",
+      "PLsabgwJDKALr2-EPjszQZ3eTQQ1yl81ui",
+      "PLJ0WU3XQoz4_vDPS0Xlaf3E2LgUz7pJsp",
+      "PLJ0WU3XQoz48dYxaKhohHdaN-DDlTAIx3",
+      "PLN4Jcpui4Yq23t4Yo3rKRzRt9MmMHa70I",
+      "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
+      "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
+      "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
+    ];
+    String? token;
+    final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
+    WidgetsBinding.instance.addPostFrameCallback((t) async {
+      final playlists = await ref.read(playlistProvider(args).future);
+      setState(() {
+        service =
+            AsyncValue
+            // .loading();
+            // .data(playlists);
+            .error(Error(), StackTrace.fromString("Stack"));
+      });
+    });
   }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // === Header ===
-              _buildHeader(),
-              const SizedBox(height: 20),
-
-              // === Progress Card ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildProgressCard(),
-              ),
-              const SizedBox(height: 28),
-
-              // === Use Lessons Section ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSectionTitle('استخدمي الدروس'),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(height: 195, child: _buildVideoCardsRow()),
-              const SizedBox(height: 28),
-
-              // === My Favorite Courses Section ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSectionTitle('دوراتي المفضلة'),
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'أهمية القراءة السريعة',
-                subtitle: '45 دقيقة  |  12 درس',
-                progressText: '8 من 12 درس',
-                progressPercent: 0.67,
-                percentText: '67%',
-                isLocked: false,
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'كيف تقرأ',
-                subtitle: '60 دقيقة  |  37 درس',
-                progressText: '15 من 37 درس',
-                progressPercent: 0.41,
-                percentText: '41%',
-                isLocked: false,
-              ),
-              const SizedBox(height: 12),
-              _buildCourseCard(
-                title: 'القراءة السريعة المتقدمة',
-                subtitle: '90 دقيقة  |  30 درس',
-                progressText: '',
-                progressPercent: 0.0,
-                percentText: '',
-                isLocked: true,
-              ),
-              const SizedBox(height: 28),
-
-              // === Promotional Card ===
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildPromoCard(),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(90),
+        child: _buildHeader(),
+      ),
+      body: SizedBox(
+        height: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          child: _buildVideoCardsRow(),
         ),
       ),
     );
@@ -116,7 +69,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(top: 48, bottom: 24, left: 16, right: 16),
+      padding: const EdgeInsets.only(top: 48, bottom: 12, left: 16, right: 16),
       decoration: const BoxDecoration(
         color: Color(0xFF00897B),
         borderRadius: BorderRadius.only(
@@ -135,128 +88,12 @@ class HomeScreen extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ===================== PROGRESS CARD =====================
-  Widget _buildProgressCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Left side: Percentage circle
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: CircularProgressIndicator(
-                  value: 0.78,
-                  strokeWidth: 7,
-                  backgroundColor: const Color(0xFFE0E0E0),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    Color(0xFF00897B),
-                  ),
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text(
-                    '78%',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF00897B),
-                    ),
-                  ),
-                  Text(
-                    'تقدم',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF9E9E9E),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(width: 20),
-          // Right side: text info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '5 ',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF00897B),
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'دروس',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF00897B),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'أكملت هذا الأسبوع',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF757575),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: LinearProgressIndicator(
-                    value: 0.78,
-                    minHeight: 8,
-                    backgroundColor: const Color(0xFFE0E0E0),
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFF00897B),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: IconButton.styleFrom(minimumSize: const Size(8, 8)),
+            icon: Icon(Icons.arrow_forward, color: Colors.white, size: 28),
           ),
         ],
       ),
@@ -275,329 +112,231 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ===================== VIDEO CARDS ROW =====================
   Widget _buildVideoCardsRow() {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      children: [
-        _buildVideoCard(
-          imageName: 'video1',
-          duration: '15:45',
-          title: 'أهمية القراءة السريعة',
-        ),
-        const SizedBox(width: 12),
-        _buildVideoCard(
-          imageName: 'video2',
-          duration: '12:30',
-          title: 'التركيز والانتباه',
-        ),
-      ],
+    return Container(
+      child: service?.when(
+        skipLoadingOnRefresh: false,
+        skipLoadingOnReload: false,
+        data: (data) {
+          return SingleChildScrollView(
+            child: Center(
+              child: Wrap(
+                spacing: 20,
+                runSpacing: 20,
+                children: List.generate(data.items.length, (i) {
+                  final item = data.items[i];
+                  final snippet = item.snippet;
+                  if (snippet == null) {
+                    return _buildVideoCard(
+                      id: null,
+                      num: i,
+                      imageName: "NULL",
+                      duration: 0,
+                      title: "NONE",
+                    );
+                  }
+                  return _buildVideoCard(
+                    id: item.id!,
+                    num: i,
+                    imageName: snippet.title ?? "NULL",
+                    duration: item.contentDetails?.itemCount ?? 1,
+                    title: snippet.title ?? "",
+                    thumbnail: snippet.thumbnails?.medium?.url,
+                  );
+                }),
+              ),
+            ),
+          );
+        },
+        error: (err, stack) {
+          WidgetsBinding.instance.addPostFrameCallback((t) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                elevation: 3,
+                margin: const EdgeInsets.only(bottom: 36, left: 16, right: 16),
+                content: Text(
+                  "Error: $err",
+                  textDirection: TextDirection.ltr,
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                ),
+                duration: const Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+                dismissDirection: DismissDirection.down,
+                backgroundColor: Colors.red.shade900,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            );
+          });
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Error in loading playlists,\nConnect to Internet and try again.",
+                  textDirection: TextDirection.ltr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 24, color: Colors.red.shade800),
+                ),
+                SizedBox.fromSize(size: Size.fromHeight(20)),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 13, 126, 94),
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Text(
+                      "Retry",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        loading: () => _loading(),
+      ),
     );
+  }
+
+  Widget _loading() {
+    return Container(child: const Center(child: CircularProgressIndicator()));
   }
 
   Widget _buildVideoCard({
+    required String? id,
+    required int num,
     required String imageName,
-    required String duration,
+    required int duration,
     required String title,
+    String? thumbnail,
   }) {
-    return Container(
-      width: 175,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+    return GestureDetector(
+      onTap: () {
+        if (id == null) return;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PlaylistScreen(id: id, name: title),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Thumbnail area
-          Stack(
-            children: [
-              Container(
-                height: 110,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(14),
-                    topRight: Radius.circular(14),
-                  ),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
-                  ),
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/$imageName.png'),
-                    fit: BoxFit.cover,
-                    onError: (_, __) {},
-                  ),
-                ),
-              ),
-              // Play button overlay
-              Positioned.fill(
-                child: Center(
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFC107),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 26,
-                    ),
-                  ),
-                ),
-              ),
-              // Duration label
-              Positioned(
-                bottom: 6,
-                left: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    duration,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Title
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF333333),
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ===================== COURSE CARD =====================
-  Widget _buildCourseCard({
-    required String title,
-    required String subtitle,
-    required String progressText,
-    required double progressPercent,
-    required String percentText,
-    required bool isLocked,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+        );
+      },
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        width: 160,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withOpacity(0.10),
               blurRadius: 8,
-              offset: const Offset(0, 3),
+              offset: const Offset(0, 0),
             ),
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Course info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF333333),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF9E9E9E),
-                    ),
-                  ),
-                  if (!isLocked && progressText.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text(
-                          progressText,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF757575),
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          percentText,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF00897B),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: progressPercent,
-                        minHeight: 6,
-                        backgroundColor: const Color(0xFFE0E0E0),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF00897B),
-                        ),
+            // Thumbnail area
+            Stack(
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(14),
+                        topRight: Radius.circular(14),
+                      ),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
+                      ),
+                      image: DecorationImage(
+                        image: thumbnail == null
+                            ? AssetImage('images/$imageName.jpg')
+                            : NetworkImage(thumbnail),
+                        fit: BoxFit.cover,
+                        onError: (_, __) {},
                       ),
                     ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Action button
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: isLocked
-                    ? const Color(0xFFE0E0E0)
-                    : const Color(0xFFFFC107),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Icon(
-                isLocked ? Icons.lock_outline : Icons.play_arrow,
-                color: isLocked ? const Color(0xFF9E9E9E) : Colors.white,
-                size: 24,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ===================== PROMO CARD =====================
-  Widget _buildPromoCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFFFE082), width: 1.2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Star icon
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFC107).withOpacity(0.25),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.star_rounded,
-              color: Color(0xFFFFA000),
-              size: 28,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Text content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'تسجيل',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF333333),
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  '23 درس جديد في دورة جديدة متاحة الآن',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF757575),
+                // Play button overlay
+                Positioned.fill(
+                  child: Center(
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFC107),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                ),
+                // Duration label
+                Positioned(
+                  bottom: 6,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      duration.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: 8),
-          // Arrow icon
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFC107),
-              borderRadius: BorderRadius.circular(10),
+            // Title
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF333333),
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

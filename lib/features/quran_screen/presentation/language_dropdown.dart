@@ -26,7 +26,7 @@ class LanguageDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LanguageItem? selectedItem = languages.firstWhere(
+    final LanguageItem selectedItem = languages.firstWhere(
       (item) => item.code == selectedLanguageCode,
       orElse: () => languages.isNotEmpty
           ? languages.first
@@ -53,7 +53,7 @@ class LanguageDropdown extends StatelessWidget {
 
             // Current language name
             Text(
-              selectedItem?.name ?? "",
+              selectedItem.name ?? "",
               style: const TextStyle(
                 color: Color(0xFF212121),
                 fontSize: 14.0,

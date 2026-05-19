@@ -94,155 +94,145 @@ class _DuaTileState extends State<DuaTile> {
               if (!_disabled) _expand = !_expand;
             });
           },
-          child: Directionality(
-            textDirection: .rtl,
-            child: Column(
-              mainAxisSize: .min,
-              crossAxisAlignment: .start,
-              children: [
-                ListTile(
-                  contentPadding:
-                      ((widget.duaNotices?.length ?? 0) == 1 &&
-                          (widget.duaNotices?[0].length ?? 0) < 19)
-                      ? EdgeInsets.all(12)
-                      : EdgeInsetsGeometry.directional(
-                          top: 12,
-                          start: 12,
-                          end: 12,
-                          bottom: 0,
-                        ),
-                  titleAlignment: .top,
-                  horizontalTitleGap: 12,
-                  leading: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: TextButton(
-                      onPressed: () {
-                        if (_counter > 0) {
-                          setState(() {
-                            _counter--;
-                            widget.onCountUpdate(_counter);
-                            if (_counter == 0) {
-                              _disabled = true;
-                              widget.onComplete();
-                            }
-                          });
-                        }
-                      },
-                      onLongPress: () {
-                        setState(() {
-                          _counter = widget.count ?? _counter;
-                          _disabled = false;
-                          widget.onCountUpdate(_counter);
-                        });
-                      },
-                      style: TextButton.styleFrom(
-                        shape: CircleBorder(),
-                        padding: .zero,
-                        foregroundColor: Colors.white,
-                        backgroundColor: _disabled
-                            ? Colors.green
-                            : Colors.orange,
+          child: Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              ListTile(
+                contentPadding:
+                    ((widget.duaNotices?.length ?? 0) == 1 &&
+                        (widget.duaNotices?[0].length ?? 0) < 19)
+                    ? EdgeInsets.all(12)
+                    : EdgeInsetsGeometry.directional(
+                        top: 12,
+                        start: 12,
+                        end: 12,
+                        bottom: 0,
                       ),
-                      child: Text(
-                        _counter.toString(),
-                        style: TextStyle(fontWeight: .new(400), fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    maxLines: _expand ? null : 2,
-                    overflow: _expand ? null : .ellipsis,
-                    widget.dua ?? '',
-                    style: const TextStyle(fontFamily: 'Kitab', height: 1.62),
-                  ),
-                  trailing: IconButton(
-                    highlightColor: Colors.transparent,
+                titleAlignment: .top,
+                horizontalTitleGap: 12,
+                leading: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: TextButton(
                     onPressed: () {
-                      setState(() {
-                        _favourite = !_favourite;
-                      });
-                      widget.onFavouritePress();
+                      if (_counter > 0) {
+                        setState(() {
+                          _counter--;
+                          widget.onCountUpdate(_counter);
+                          if (_counter == 0) {
+                            _disabled = true;
+                            widget.onComplete();
+                          }
+                        });
+                      }
                     },
-                    icon: Icon(
-                      _favourite ? Icons.favorite : Icons.favorite_outline,
-                      color: _favourite ? Colors.red : Color(0xff0d7e5e),
+                    onLongPress: () {
+                      setState(() {
+                        _counter = widget.count ?? _counter;
+                        _disabled = false;
+                        widget.onCountUpdate(_counter);
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: .zero,
+                      foregroundColor: Colors.white,
+                      backgroundColor: _disabled ? Colors.green : Colors.orange,
                     ),
-                    iconSize: 16,
-                    padding: .zero,
+                    child: Text(
+                      _counter.toString(),
+                      style: TextStyle(fontWeight: .new(400), fontSize: 16),
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 64,
-                    left: 12,
-                    top: 8,
-                    bottom: 20,
+                title: Text(
+                  maxLines: _expand ? null : 2,
+                  overflow: _expand ? null : .ellipsis,
+                  widget.dua ?? '',
+                  style: const TextStyle(fontFamily: 'Kitab', height: 1.62),
+                ),
+                trailing: IconButton(
+                  highlightColor: Colors.transparent,
+                  onPressed: () {
+                    setState(() {
+                      _favourite = !_favourite;
+                    });
+                    widget.onFavouritePress();
+                  },
+                  icon: Icon(
+                    _favourite ? Icons.favorite : Icons.favorite_outline,
+                    color: _favourite ? Colors.red : Color(0xff0d7e5e),
                   ),
-                  child: Stack(
-                    children: [
-                      SizedBox(
-                        height: _expand ? null : 25.9,
-                        child: Wrap(
-                          runSpacing: 8,
-                          spacing: 8,
-                          clipBehavior: .antiAlias,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
+                  iconSize: 16,
+                  padding: .zero,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 64,
+                  left: 12,
+                  top: 8,
+                  bottom: 20,
+                ),
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: _expand ? null : 25.9,
+                      child: Wrap(
+                        runSpacing: 8,
+                        spacing: 8,
+                        clipBehavior: .antiAlias,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 2.0,
+                              horizontal: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: .fromRGBO(212 - 10, 175 - 10, 55 - 10, 1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              widget.duaNarrator ?? '',
+                              style: TextStyle(fontFamily: 'Kitab'),
+                            ),
+                          ),
+                          ...widget.duaNotices!.map(
+                            (notice) => Container(
+                              padding: const .symmetric(
                                 vertical: 2.0,
                                 horizontal: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: .fromRGBO(
-                                  212 - 10,
-                                  175 - 10,
-                                  55 - 10,
-                                  1,
+                                border: .all(
+                                  color: .fromRGBO(13, 126, 94, 0.12),
                                 ),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: .circular(12),
                               ),
                               child: Text(
-                                widget.duaNarrator ?? '',
+                                notice,
                                 style: TextStyle(fontFamily: 'Kitab'),
                               ),
                             ),
-                            ...widget.duaNotices!.map(
-                              (notice) => Container(
-                                padding: const .symmetric(
-                                  vertical: 2.0,
-                                  horizontal: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: .all(
-                                    color: .fromRGBO(13, 126, 94, 0.12),
-                                  ),
-                                  borderRadius: .circular(12),
-                                ),
-                                child: Text(
-                                  notice,
-                                  style: TextStyle(fontFamily: 'Kitab'),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!_expand)
+                      Container(
+                        margin: const EdgeInsets.only(top: 32, left: 16),
+                        alignment: .bottomLeft,
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 22,
+                          color: Color(0xFF6B6B6B),
                         ),
                       ),
-                      if (!_expand)
-                        Container(
-                          margin: const EdgeInsets.only(top: 32, left: 16),
-                          alignment: .bottomLeft,
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 22,
-                            color: Color(0xFF6B6B6B),
-                          ),
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
