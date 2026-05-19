@@ -1,5 +1,8 @@
 import 'package:aqem/features/QuranLearning/Quranpage.dart';
+import 'package:aqem/features/azkar/azkar_categories.dart';
 import 'package:aqem/features/home_screen/presentation/nav_card.dart';
+import 'package:aqem/features/home_screen/presentation/view.dart';
+import 'package:aqem/features/masbaha/presentation/masbaha.dart';
 import 'package:aqem/features/quran_screen/presentation/SurahSelection.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +42,11 @@ class NavCards extends StatelessWidget {
                   iconBackgroundColor: _secondaryIconColor(
                     context,
                   ), //onInverseSurface
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(
+                      context,
+                    ).push(MaterialPageRoute(builder: (context) => HomeView()));
+                  },
                 ),
               ),
             ],
@@ -53,7 +60,11 @@ class NavCards extends StatelessWidget {
                   iconData: Icons.front_hand_outlined,
                   title: 'الأدعية والأذكار',
                   subtitle: 'حصن المسلم',
-                  onCardTap: () {},
+                  onCardTap: () {
+                    Navigator.of(
+                      context,
+                    ).push(MaterialPageRoute(builder: (context) => AdkarApp()));
+                  },
                 ),
               ),
               Expanded(
@@ -64,46 +75,47 @@ class NavCards extends StatelessWidget {
                   iconBackgroundColor: _secondaryIconColor(
                     context,
                   ), //onInverseSurface
-                  onCardTap: () {},
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12),
-          Row(
-            spacing: 12,
-            children: [
-              Expanded(
-                child: NavCard(
-                  iconData: Icons.headset_outlined,
-                  title: 'تعليم القرآن',
-                  subtitle: 'دروس وتلاوات',
                   onCardTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Home()),
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                child: NavCard(
-                  iconData: Icons.location_on_outlined,
-                  title: 'المساجد',
-                  subtitle: 'أقرب المساجد',
-                  iconBackgroundColor: _secondaryIconColor(
-                    context,
-                  ), //onInverseSurface
-                  onCardTap: () {},
+                   //Navigator.of(
+                     //context,
+                    //).push(MaterialPageRoute(builder: (context) => ));
+                  },  //todo
                 ),
               ),
             ],
           ),
           SizedBox(height: 12),
           NavCard(
+            iconData: Icons.headset_outlined,
+            title: 'تعليم القرآن',
+            subtitle: 'دروس وتلاوات',
+            onCardTap: () {
+              print("=== DEBUG: Pressed Quran card ===");
+              print("Current route: ${ModalRoute.of(context)?.settings.name}");
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    print("Building Home screen");
+                    return Home();
+                  },
+                ),
+              ).then((_) {
+                print("Returned from Home screen");
+              });
+            },
+          ),
+
+          SizedBox(height: 12),
+          NavCard(
             iconData: Icons.circle_outlined,
             title: 'المسبحة',
             subtitle: 'عداد التسبيح',
-            onCardTap: () {},
+            onCardTap: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => TasbihApp()));
+            },
           ),
           SizedBox(height: 12),
           NavCard(
@@ -113,7 +125,11 @@ class NavCards extends StatelessWidget {
             iconBackgroundColor: _secondaryIconColor(
               context,
             ), //onInverseSurface
-            onCardTap: () {},
+            onCardTap: () {
+              //Navigator.of(
+              //context,
+           // ).push(MaterialPageRoute(builder: (context) => ));
+        }, //todo
           ),
         ],
       ),

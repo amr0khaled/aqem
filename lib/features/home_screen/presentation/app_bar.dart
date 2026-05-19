@@ -19,17 +19,32 @@ class _HomeAppBar extends State<HomeAppBar> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DefaultTextStyle.merge(
-              style: TextStyle(color: Colors.white),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("المصحف الشريف", style: TextStyle(fontSize: 36)),
-                  Text(
-                    "السلام عليكم ورحمة الله",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
+            Expanded(
+              child: DefaultTextStyle.merge(
+                style: TextStyle(color: Colors.white),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "المصحف الشريف",
+                      style: const TextStyle(
+                        fontSize: 36,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      textDirection: TextDirection.rtl,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "السلام عليكم ورحمة الله",
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      softWrap: true,
+                      textDirection: TextDirection.rtl,
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(

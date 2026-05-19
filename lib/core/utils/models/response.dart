@@ -1,4 +1,3 @@
-import 'package:googleapis/youtube/v3.dart';
 
 class YoutubeResponse<T> {
   final String? nextPageToken;

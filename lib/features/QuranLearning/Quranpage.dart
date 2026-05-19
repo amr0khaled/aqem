@@ -3,8 +3,9 @@ import 'package:googleapis/youtube/v3.dart';
 import 'package:aqem/features/QuranLearning/PlaylistScreen.dart';
 import 'package:aqem/features/QuranLearning/data/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'domain/playlistCategorizer.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -14,10 +15,12 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class HomeScreen extends ConsumerState<Home> {
-  AsyncValue<YoutubeResponse<Playlist>>? service;
+  AsyncValue<YoutubeResponse<Playlist>> service = const AsyncValue.loading();
+  final Set<String> _expandedLanguages = {};
   @override
   void initState() {
     super.initState();
+    print("=== Home initState START ===");
     List<String> playlistsIds = [
       "PLrh3vCTZVOBFg1PJw7QIk9C5QaQyProdm",
       "PLcgZz-bFmPJGssn_LeVi1z7R69RJs8yXo",
@@ -33,35 +36,90 @@ class HomeScreen extends ConsumerState<Home> {
       "PLKhm8Z5pXdOXjBYqLvu2L2YCghTEPkMJj",
       "PLMs1030u4hsHktPKd9xHaCVINOGVQUllc",
       "PLMs1030u4hsEq4Mh1aaaKuEupEYDP9nda",
+      "PLfUTesWN0JTyQvVOoRQnUguU-v0kxoL-p",
+      "PLNalK17Hk_LLXXtEd7cPt4iQOansx4hrC",
+      "PLr-mGUA8J2jZhxMrL3aIMztK8ahe3j3J5",
+      "PL2DS0i9dIF-fJL1unaXvyyzkryVa2NqtB",
+      "PL01rifg2BPPNhIHrCJLzPqC_QLlSeCy3F",
+      "PLMpZpT9IRpAC3CgmxnJJxXXVXNCPi7htq",
+      "PLbhs-wBfoMATnLCIpm1BS_TNsevpsYhE_",
+      "PLF-AzhmyjY8xEojcjawrgQ8P21MJRuVfM",
+      "PL3Q0fwpkr-mE0z2YIGoAQ2u_e1dC6jyp7",
+      "PLa4GKxenTk5XGzNcexkFzVJfVMjic6izh"
     ];
+    print("Fetching playlists for IDs: ${playlistsIds.length} items");
+
     String? token;
     final args = PlaylistArgs(ids: playlistsIds, max: 5, token: token);
     WidgetsBinding.instance.addPostFrameCallback((t) async {
+      print("Post frame callback running...");
+      try {
       final playlists = await ref.read(playlistProvider(args).future);
+      print("Playlists received: ${playlists.items.length}");
+      if(!mounted) return;
       setState(() {
         service = AsyncValue.data(playlists);
+        if (playlists.items.isNotEmpty) {
+          final categorized = PlaylistCategorizer.categorize(playlists.items);
+          if (categorized.isNotEmpty) {
+            _expandedLanguages.add(categorized.keys.first);
+          }
+        }
       });
+      print("setState completed");
+      } catch (e, stack) {
+        print("ERROR fetching playlists: $e");
+        print("Stack: $stack");
+        if (mounted) {
+          setState(() {
+            service = AsyncValue.error(e, stack);
+          });
+        }
+      }
     });
+    print("=== Home initState END ===");
   }
 
   @override
   Widget build(BuildContext context) {
+    print("=== Home BUILD called, service state: ${service.runtimeType} ===");
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(90),
         child: _buildHeader(),
       ),
-      body: SizedBox(
-        height: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: _buildVideoCardsRow(),
-        ),
-      ),
+      body:service.when(
+        data: (data) {
+          print("Home: data branch, items: ${data.items.length}");
+          if (data.items.isEmpty) {
+            return const Center(child: Text('No playlists found'));
+          }
+          final categorized = PlaylistCategorizer.categorize(data.items);
+          return _buildCategorizedView(categorized);
+        },
+        error: (err, stack) {
+          print("Home: error branch: $err");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Error: $err"),
+                duration: const Duration(seconds: 3),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          });
+          return Center(
+            child: Text("Error: $err\n\n$stack"),
+          );
+        },
+        loading: () {
+          print("Home: loading branch");
+          return const Center(child: CircularProgressIndicator());
+        },
+      )
+
     );
   }
-
-  // ===================== HEADER =====================
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
@@ -77,7 +135,7 @@ class HomeScreen extends ConsumerState<Home> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'تقدمي في الدرس',
+            'تقدم في الدرس',
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -98,82 +156,138 @@ class HomeScreen extends ConsumerState<Home> {
     );
   }
 
-  // ===================== SECTION TITLE =====================
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-        color: Color(0xFF333333),
-      ),
+  Widget _buildCategorizedView( Map<String,Map<PlaylistFunction, List<Playlist>>> categorized,) {
+    return  SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        child: Column(children: categorized.entries.map((languageEntry) {
+          final language = languageEntry.key;
+          final functions = languageEntry.value;
+          return Card(margin: const EdgeInsets.only(bottom: 16),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ), child: ExpansionTile(
+                  initiallyExpanded: _expandedLanguages.contains(language),
+                  onExpansionChanged: (expanded) {
+                    setState(() {
+                      if (expanded) {
+                        _expandedLanguages.add(language);
+                      } else {
+                        _expandedLanguages.remove(language);
+                      }
+                    });
+                  }, tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  title: Row(
+                    children: [
+                  Icon(
+                  language == 'العربية' ? Icons.language : Icons.public,
+                    color: const Color(0xFF00897B),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    language,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF00897B),
+                    ),
+                  ),const SizedBox(width: 8),
+                      Text(
+                        '(${_totalCount(functions)})',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),children: functions.entries.map((functionEntry) {
+                final function = functionEntry.key;
+                final playlists = functionEntry.value;
+                final functionName = PlaylistCategorizer.getFunctionName(
+                  function,
+                  language,
+                );  return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 16,
+                  bottom: 12,
+                ),
+                child: Row(
+                children: [
+                Icon(
+                _getFunctionIcon(function),
+                size: 20,
+                color: Colors.grey.shade700,
+                ),const SizedBox(width: 8),
+                Text(
+                functionName,
+                style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade800,
+                ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                '(${playlists.length})',
+                style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade500,
+                ),),
+                ],
+                ),
+                ),Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Wrap(
+                        spacing: 16,
+                        runSpacing: 16,
+                        children: playlists.map((playlist) {
+                          return _buildVideoCard(playlist);
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    if (function != functions.keys.last)
+                      const Divider(height: 8, indent: 20, endIndent: 20),
+                  ],
+                );
+            }).toList(),
+            ),
+          );}).toList(),
+        ),
     );
   }
-
-  Widget _buildVideoCardsRow() {
-    return Container(
-      child: service?.when(
-        data: (data) {
-          return SingleChildScrollView(
-            child: Center(
-              child: Wrap(
-                spacing: 20,
-                runSpacing: 20,
-                children: List.generate(data.items.length, (i) {
-                  final item = data.items[i];
-                  final snippet = item.snippet;
-                  if (snippet == null) {
-                    return _buildVideoCard(
-                      id: null,
-                      num: i,
-                      imageName: "NULL",
-                      duration: 0,
-                      title: "NONE",
-                    );
-                  }
-                  return _buildVideoCard(
-                    id: item.id!,
-                    num: i,
-                    imageName: snippet.title ?? "NULL",
-                    duration: item.contentDetails?.itemCount ?? 1,
-                    title: snippet.title ?? "",
-                    thumbnail: snippet.thumbnails?.medium?.url,
-                  );
-                }),
-              ),
-            ),
-          );
-        },
-        error: (err, stack) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Error: $err"),
-              duration: const Duration(seconds: 3),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          return Center(
-            child: Text("""Error: $err
-Stack: $stack"""),
-          );
-        },
-        loading: () => _loading()
-            ,
-      ),
-    );
-  }
-  Widget _loading() {
-    return Container(child: const Center(child: CircularProgressIndicator()));
+  int _totalCount(Map<PlaylistFunction, List<Playlist>> functions) {
+    return functions.values.fold(0, (sum, list) => sum + list.length);
   }
 
-  Widget _buildVideoCard({
-    required String? id,
-    required int num,
-    required String imageName,
-    required int duration,
-    required String title,
-    String? thumbnail,
-  }) {
+  IconData _getFunctionIcon(PlaylistFunction function) {
+    switch (function) {
+      case PlaylistFunction.tajweed:
+        return Icons.auto_awesome;
+      case PlaylistFunction.recitation:
+        return Icons.mic;
+      case PlaylistFunction.stories:
+        return Icons.menu_book;
+      case PlaylistFunction.ChildrenMemorize:
+        return Icons.child_care;
+      case PlaylistFunction.AdultMemorize:
+        return Icons.person;
+      case PlaylistFunction.other:
+        return Icons.playlist_play;
+    }
+  }
+
+  Widget _buildVideoCard(Playlist playlist) {
+    final snippet = playlist.snippet;
+    final id = playlist.id;
+    final title = snippet?.title ?? 'Untitled';
+    final thumbnail = snippet?.thumbnails?.medium?.url;
+    final itemCount = playlist.contentDetails?.itemCount ?? 0;
     return GestureDetector(
       onTap: () {
         if (id == null) return;
@@ -216,14 +330,22 @@ Stack: $stack"""),
                         end: Alignment.bottomCenter,
                         colors: [Color(0xFF4DB6AC), Color(0xFF00897B)],
                       ),
-                      image: DecorationImage(
-                        image: thumbnail == null
-                            ? AssetImage('images/$imageName.jpg')
-                            : NetworkImage(thumbnail),
-                        fit: BoxFit.cover,
+                      image: thumbnail == null
+                          ? null:DecorationImage(
+                          image: NetworkImage(thumbnail),
+                          fit: BoxFit.cover,
                         onError: (_, __) {},
                       ),
                     ),
+                    child: thumbnail == null
+                        ? const Center(
+                      child: Icon(
+                        Icons.playlist_play,
+                        color: Colors.white70,
+                        size: 40,
+                      ),
+                    )
+                        : null,
                   ),
                 ),
                 // Play button overlay
@@ -265,7 +387,7 @@ Stack: $stack"""),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      duration.toString(),
+                      '$itemCount videos',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
